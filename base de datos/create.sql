@@ -74,7 +74,7 @@ CREATE TABLE ventas (
     cliente_id INT,
     forma_pago VARCHAR(50),
     total_factura DECIMAL(10,2),
-    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id)
 );
 
 
@@ -85,6 +85,6 @@ CREATE TABLE detalle_venta (
     cantidad INT,
     precio_unitario DECIMAL(10,2),
     total_articulo DECIMAL(10,2),
-    FOREIGN KEY (venta_id) REFERENCES venta(id),
+    FOREIGN KEY (venta_id) REFERENCES ventas(id),
     FOREIGN KEY (producto_id) REFERENCES producto(id)
 );
