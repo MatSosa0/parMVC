@@ -30,6 +30,17 @@
         <servlet-class>controlador.ControladorProveedores</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>ControladorCompras</servlet-name>
+     <servlet-class>controlador.ControladorCompras</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ControladorCompras</servlet-name>
+        <url-pattern>/ControladorCompras</url-pattern>
+    </servlet-mapping>
+
+
     <servlet-mapping>
         <servlet-name>ControladorProveedores</servlet-name>
         <url-pattern>/ControladorProveedores</url-pattern>

@@ -38,6 +38,7 @@
                     if (usuario.getAdministrador() == 1){
                 %>
                 <div>
+                    <a class="btn btn-outline-danger" href="ControladorCompras?accion=nueva">Compras</a>
                     <a class="btn btn-outline-danger" href="ControladorProveedores?accion=listar">Proveedores</a>
                     <a class="btn btn-outline-danger" href="ControladorClientes?accion=listar">Clientes</a>
                     <a class="btn btn-outline-danger" href="ControladorUsuarios?accion=listar">Usuarios</a>

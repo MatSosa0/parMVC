@@ -32,4 +32,27 @@ public class CompraDAO {
         Conexion.cerrarConexion();
         return idGenerado;
     }
+    public Compra getCompraPorId(int id) {
+    Compra compra = null;
+    String sql = "SELECT * FROM compra WHERE id = ?";
+    try {
+        PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            compra = new Compra();
+            compra.setId(rs.getInt("id"));
+            compra.setProveedorId(rs.getInt("proveedor_id"));
+            compra.setFecha(rs.getDate("fecha"));
+            compra.setFormaPago(rs.getString("forma_pago"));
+            compra.setTotalFactura(rs.getDouble("total_factura"));
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al obtener compra por ID: " + e.getMessage());
+    } finally {
+        Conexion.cerrarConexion();
+    }
+    return compra;
+}
+
 }

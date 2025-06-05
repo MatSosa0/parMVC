@@ -58,4 +58,15 @@ public class DetalleCompra {
     public void setTotalArticulo(double totalArticulo) {
         this.totalArticulo = totalArticulo;
     }
+    
+    private String nombreProducto;
+
+public String getNombreProducto() {
+    return nombreProducto;
+}
+
+public void setNombreProducto(String nombreProducto) {
+    this.nombreProducto = nombreProducto;
+}
+
 }
