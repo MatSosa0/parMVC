@@ -31,8 +31,10 @@ public class ControladorClientes extends HttpServlet {
             case "listar":
                 List<Cliente> lista = dao.getClientes();
                 request.setAttribute("listaClientes", lista);
-                request.getRequestDispatcher("listarClientes.jsp").forward(request, response);
+                request.setAttribute("contenido", "listarClientes.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
+
 
             case "add":
                 request.getRequestDispatcher("addCliente.jsp").forward(request, response);
