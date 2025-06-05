@@ -9,7 +9,7 @@
     </head>
     <body>
         <div class="container mt-4 col-lg-3">
-            <h1>Bienvenidos al sistema de gestión XYZ</h1>
+            <h1>Bienvenidos</h1>
             <form action="Validar" method="post">
                 
                 <div class="form-group m-4">
