@@ -135,5 +135,47 @@ public class ProductoDAO implements InterfazProductoDAO {
         
         return resultado;
     }
+    
+    public Producto getProductoPorId(int id) {
+    Producto producto = null;
+    String sql = "SELECT * FROM producto WHERE id = ?";
+    try {
+        PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            producto = new Producto();
+            producto.setId(rs.getInt("id"));
+            producto.setNombre(rs.getString("nombre"));
+            producto.setDescripcion(rs.getString("descripcion"));
+            producto.setUnidades(rs.getInt("unidades"));
+            producto.setCosto(rs.getDouble("costo"));
+            producto.setPrecio(rs.getDouble("precio"));
+            producto.setCategoria(rs.getString("categoria"));
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al obtener producto por ID: " + e);
+    } finally {
+        Conexion.cerrarConexion();
+    }
+    return producto;
+}
+
+    public int actualizarStock(int idProducto, int nuevoStock) {
+    int resultado = 0;
+    String sql = "UPDATE producto SET unidades = ? WHERE id = ?";
+    try {
+        PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+        ps.setInt(1, nuevoStock);
+        ps.setInt(2, idProducto);
+        resultado = ps.executeUpdate();
+    } catch (SQLException e) {
+        System.err.println("Error al actualizar stock del producto: " + e);
+    } finally {
+        Conexion.cerrarConexion();
+    }
+    return resultado;
+}
+
 
 }

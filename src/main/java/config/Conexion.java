@@ -8,7 +8,7 @@ public class Conexion {
 
     //Importante. Deben configurar segun su escenario
     private static final String user = "root";
-    private static final String password = "1234";
+    private static final String password = "admin";
     private static final String driver = "com.mysql.cj.jdbc.Driver";
     private static final String url = "jdbc:mysql://localhost:3306/sistemamvc"; // 127.0.0.1
     private static Connection conexion = null;
