@@ -39,14 +39,13 @@
                 %>
                 <div>
                     <a class="btn btn-outline-danger" href="ControladorCompras?accion=nueva">Compras</a>
+                    <a class="btn btn-outline-danger" href="ControladorVentas?accion=listar">Ventas</a> <!-- Botón nuevo agregado aquí -->
                     <a class="btn btn-outline-danger" href="ControladorProveedores?accion=listar">Proveedores</a>
                     <a class="btn btn-outline-danger" href="ControladorClientes?accion=listar">Clientes</a>
                     <a class="btn btn-outline-danger" href="ControladorUsuarios?accion=listar">Usuarios</a>
                     <a class="btn btn-outline-danger" href="Auditoria?accion=listar">Auditoria</a>
                 </div>
                 <% } } %>
-                
-                
             </div>
             <hr>
             <table class="table">

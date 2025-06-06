@@ -1,36 +1,41 @@
 package modelo;
 
+import java.util.Date;
+import java.util.List;
+
 public class Venta {
-    private int id;
-    private int idCliente;
-    private String fecha;
-    private double total;
+    private Integer id;
+    private String numeroFactura;
+    private Date fecha;
+    private Integer clienteId;
+    private String formaPago;
+    private Double totalFactura;
+    private List<DetalleVenta> detalles;
 
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getIdCliente() {
-        return idCliente;
-    }
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+    public Venta() {
     }
 
-    public String getFecha() {
-        return fecha;
-    }
-    public void setFecha(String fecha) {
+    public Venta(String numeroFactura, Date fecha, Integer clienteId, String formaPago, Double totalFactura) {
+        this.numeroFactura = numeroFactura;
         this.fecha = fecha;
+        this.clienteId = clienteId;
+        this.formaPago = formaPago;
+        this.totalFactura = totalFactura;
     }
 
-    public double getTotal() {
-        return total;
-    }
-    public void setTotal(double total) {
-        this.total = total;
-    }
+    // Getters y Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getNumeroFactura() { return numeroFactura; }
+    public void setNumeroFactura(String numeroFactura) { this.numeroFactura = numeroFactura; }
+    public Date getFecha() { return fecha; }
+    public void setFecha(Date fecha) { this.fecha = fecha; }
+    public Integer getClienteId() { return clienteId; }
+    public void setClienteId(Integer clienteId) { this.clienteId = clienteId; }
+    public String getFormaPago() { return formaPago; }
+    public void setFormaPago(String formaPago) { this.formaPago = formaPago; }
+    public Double getTotalFactura() { return totalFactura; }
+    public void setTotalFactura(Double totalFactura) { this.totalFactura = totalFactura; }
+    public List<DetalleVenta> getDetalles() { return detalles; }
+    public void setDetalles(List<DetalleVenta> detalles) { this.detalles = detalles; }
 }

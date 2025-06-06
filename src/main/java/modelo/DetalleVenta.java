@@ -1,52 +1,35 @@
 package modelo;
 
 public class DetalleVenta {
-    private int id;
-    private int idVenta;
-    private int idProducto;
-    private int cantidad;
-    private double precioUnitario;
-    private double subtotal;
+    private Integer id;
+    private Integer ventaId;
+    private Integer productoId;
+    private Integer cantidad;
+    private Double precioUnitario;
+    private Double totalArticulo;
 
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
+    public DetalleVenta() {
     }
 
-    public int getIdVenta() {
-        return idVenta;
-    }
-    public void setIdVenta(int idVenta) {
-        this.idVenta = idVenta;
-    }
-
-    public int getIdProducto() {
-        return idProducto;
-    }
-    public void setIdProducto(int idProducto) {
-        this.idProducto = idProducto;
-    }
-
-    public int getCantidad() {
-        return cantidad;
-    }
-    public void setCantidad(int cantidad) {
+    public DetalleVenta(Integer ventaId, Integer productoId, Integer cantidad, Double precioUnitario, Double totalArticulo) {
+        this.ventaId = ventaId;
+        this.productoId = productoId;
         this.cantidad = cantidad;
-    }
-
-    public double getPrecioUnitario() {
-        return precioUnitario;
-    }
-    public void setPrecioUnitario(double precioUnitario) {
         this.precioUnitario = precioUnitario;
+        this.totalArticulo = totalArticulo;
     }
 
-    public double getSubtotal() {
-        return subtotal;
-    }
-    public void setSubtotal(double subtotal) {
-        this.subtotal = subtotal;
-    }
+    // Getters y Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public Integer getVentaId() { return ventaId; }
+    public void setVentaId(Integer ventaId) { this.ventaId = ventaId; }
+    public Integer getProductoId() { return productoId; }
+    public void setProductoId(Integer productoId) { this.productoId = productoId; }
+    public Integer getCantidad() { return cantidad; }
+    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
+    public Double getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(Double precioUnitario) { this.precioUnitario = precioUnitario; }
+    public Double getTotalArticulo() { return totalArticulo; }
+    public void setTotalArticulo(Double totalArticulo) { this.totalArticulo = totalArticulo; }
 }
