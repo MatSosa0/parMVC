@@ -44,6 +44,15 @@
                     <a class="btn btn-outline-danger" href="ControladorClientes?accion=listar">Clientes</a>
                     <a class="btn btn-outline-danger" href="ControladorUsuarios?accion=listar">Usuarios</a>
                     <a class="btn btn-outline-danger" href="Auditoria?accion=listar">Auditoria</a>
+                    
+                    <a class="btn btn-outline-dark mt-1" href="ReporteInventario">Reporte: Inventario</a><!-- Más adelante agregaremos otros botones aquí -->
+                    <a class="btn btn-outline-dark mt-1" href="ReporteVentas">Reporte: Ventas por fecha</a>
+                    <a class="btn btn-outline-dark mt-1" href="ReporteCompras">Reporte: Compras por fecha</a>
+                    <a class="btn btn-outline-dark mt-1" href="ReporteProductosMasVendidos">Reporte: Productos más vendidos</a>
+                    <a class="btn btn-outline-dark mt-1" href="ReporteTopClientes">Reporte: Top 15 Clientes</a>
+                    <a class="btn btn-outline-dark mt-1" href="ReporteTopProveedores">Reporte: Top 15 Proveedores</a>
+                    <a class="btn btn-outline-dark mt-1" href="ReporteUtilidades">Reporte: Utilidades por producto</a>
+
                 </div>
                 <% } } %>
             </div>

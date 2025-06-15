@@ -4,6 +4,7 @@
 
 <h2>Listado de Clientes</h2>
 <a href="ControladorClientes?accion=add" class="btn btn-primary mb-3">Agregar Cliente</a>
+<a href="<%= request.getContextPath() %>/Controlador?accion=listar" class="btn btn-primary mb-3">Volver</a>
 
 <table class="table table-bordered">
     <thead class="table-dark">

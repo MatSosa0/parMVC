@@ -26,7 +26,7 @@
             <div class="d-flex">
                 <a class="btn btn-outline-primary" href="ControladorVentas?accion=listar">Listar</a>
                 <a class="btn btn-outline-primary ms-2" href="ControladorVentas?accion=nuevo">Nueva Venta</a>
-                <a class="btn btn-outline-secondary ms-2" href="../listadoProductos.jsp">Volver</a>
+                <a class="btn btn-outline-primary ms-2" href="<%= request.getContextPath() %>/Controlador?accion=listar">Volver</a>
                 <a class="btn btn-outline-danger ms-2" href="../cerrarSesion">SALIR</a>
             </div>
         </div>

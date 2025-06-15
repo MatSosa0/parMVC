@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import modelo.Cliente;
 
 public class ClienteDAO implements InterfazClienteDAO {
@@ -115,4 +117,34 @@ public class ClienteDAO implements InterfazClienteDAO {
         Conexion.cerrarConexion();
         return resultado;
     }
+    
+    public List<Map<String, Object>> getTopClientes() {
+        List<Map<String, Object>> clientes = new ArrayList<>();
+        String sql = "SELECT c.id, c.nombre, SUM(v.total_factura) AS total_comprado " +
+                     "FROM cliente c " +
+                     "JOIN venta v ON c.id = v.cliente_id " +
+                     "GROUP BY c.id, c.nombre " +
+                     "ORDER BY total_comprado DESC " +
+                     "LIMIT 15";
+
+        try {
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> fila = new HashMap<>();
+                fila.put("id", rs.getInt("id"));
+                fila.put("nombre", rs.getString("nombre"));
+                fila.put("total_comprado", rs.getDouble("total_comprado"));
+                clientes.add(fila);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error en getTopClientes: " + e.getMessage());
+        }
+
+        Conexion.cerrarConexion();
+        return clientes;
+    }
+
 }

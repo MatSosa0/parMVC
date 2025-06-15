@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import modelo.Proveedor;
 
 public class ProveedorDAO implements InterfazProveedorDAO {
@@ -110,4 +112,34 @@ public class ProveedorDAO implements InterfazProveedorDAO {
         Conexion.cerrarConexion();
         return resultado;
     }
+    
+    public List<Map<String, Object>> getTopProveedores() {
+        List<Map<String, Object>> proveedores = new ArrayList<>();
+        String sql = "SELECT p.id, p.nombre, SUM(c.total_factura) AS total_comprado " +
+                     "FROM proveedor p " +
+                     "JOIN compra c ON p.id = c.proveedor_id " +
+                     "GROUP BY p.id, p.nombre " +
+                     "ORDER BY total_comprado DESC " +
+                     "LIMIT 15";
+
+        try {
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> fila = new HashMap<>();
+                fila.put("id", rs.getInt("id"));
+                fila.put("nombre", rs.getString("nombre"));
+                fila.put("total_comprado", rs.getDouble("total_comprado"));
+                proveedores.add(fila);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error en getTopProveedores: " + e.getMessage());
+        }
+
+        Conexion.cerrarConexion();
+        return proveedores;
+    }
+
 }

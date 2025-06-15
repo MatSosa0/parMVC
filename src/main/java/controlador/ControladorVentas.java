@@ -58,7 +58,7 @@ public class ControladorVentas extends HttpServlet {
         VentaDAO daoVenta = new VentaDAO();
         List<Venta> ventas = daoVenta.getVentas();
         request.setAttribute("ventas", ventas);
-        request.getRequestDispatcher("ventas/listadoVentas.jsp").forward(request, response);
+        request.getRequestDispatcher("/ventas/listadoVentas.jsp").forward(request, response);
     }
     
     private void mostrarFormularioNuevo(HttpServletRequest request, HttpServletResponse response) 
@@ -66,7 +66,7 @@ public class ControladorVentas extends HttpServlet {
         // Aquí deberías cargar clientes y productos para los selects
         // request.setAttribute("clientes", clienteDAO.listarClientes());
         // request.setAttribute("productos", productoDAO.listarProductosConStock());
-        request.getRequestDispatcher("ventas/addVenta.jsp").forward(request, response);
+        request.getRequestDispatcher("/ventas/addVenta.jsp").forward(request, response);
     }
     
     private void agregarVenta(HttpServletRequest request, HttpServletResponse response) 
@@ -157,7 +157,7 @@ public class ControladorVentas extends HttpServlet {
             if (venta != null) {
                 request.setAttribute("venta", venta);
                 // También cargar detalles de la venta si es necesario
-                request.getRequestDispatcher("ventas/editarVenta.jsp").forward(request, response);
+                request.getRequestDispatcher("/ventas/editarVenta.jsp").forward(request, response);
             } else {
                 request.setAttribute("config", "alert alert-danger");
                 request.setAttribute("mensaje", "VENTA NO ENCONTRADA");
@@ -241,7 +241,7 @@ public class ControladorVentas extends HttpServlet {
             if (venta != null) {
                 venta.setDetalles(detalles);
                 request.setAttribute("venta", venta);
-                request.getRequestDispatcher("ventas/detallesVenta.jsp").forward(request, response);
+                request.getRequestDispatcher("/ventas/detallesVenta.jsp").forward(request, response);
             } else {
                 request.setAttribute("config", "alert alert-danger");
                 request.setAttribute("mensaje", "VENTA NO ENCONTRADA");

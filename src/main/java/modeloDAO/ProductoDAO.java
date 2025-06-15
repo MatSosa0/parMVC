@@ -17,7 +17,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import modelo.Producto;
 
 public class ProductoDAO implements InterfazProductoDAO {
@@ -177,5 +179,94 @@ public class ProductoDAO implements InterfazProductoDAO {
     return resultado;
 }
 
+    public List<Map<String, Object>> getInventario() {
+        List<Map<String, Object>> inventario = new ArrayList<>();
+        String sql = "SELECT id, nombre, descripcion, categoria, unidades, precio, (unidades * precio) AS total_stock FROM producto";
 
+        try {
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> fila = new HashMap<>();
+                fila.put("id", rs.getInt("id"));
+                fila.put("nombre", rs.getString("nombre"));
+                fila.put("descripcion", rs.getString("descripcion"));
+                fila.put("categoria", rs.getString("categoria"));
+                fila.put("unidades", rs.getInt("unidades"));
+                fila.put("precio", rs.getDouble("precio"));
+                fila.put("total_stock", rs.getDouble("total_stock"));
+                inventario.add(fila);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener inventario: " + e.getMessage());
+        }
+
+        Conexion.cerrarConexion();
+        return inventario;
+    }
+    
+    public List<Map<String, Object>> getProductosMasVendidos() {
+        List<Map<String, Object>> productos = new ArrayList<>();
+        String sql = "SELECT p.id, p.nombre, SUM(dv.cantidad) AS total_vendido " +
+                     "FROM producto p " +
+                     "JOIN detalle_venta dv ON p.id = dv.producto_id " +
+                     "GROUP BY p.id, p.nombre " +
+                     "ORDER BY total_vendido DESC";
+
+        try {
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> fila = new HashMap<>();
+                fila.put("id", rs.getInt("id"));
+                fila.put("nombre", rs.getString("nombre"));
+                fila.put("total_vendido", rs.getInt("total_vendido"));
+                productos.add(fila);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error en getProductosMasVendidos: " + e.getMessage());
+        }
+
+        Conexion.cerrarConexion();
+        return productos;
+    }
+    
+    public List<Map<String, Object>> getUtilidadesPorProducto() {
+        List<Map<String, Object>> lista = new ArrayList<>();
+        String sql = "SELECT p.id, p.nombre, " +
+                     "SUM(dv.cantidad) AS total_vendido, " +
+                     "SUM(dv.cantidad * p.costo) AS costo_total, " +
+                     "SUM(dv.total_articulo) AS ingreso_total, " +
+                     "SUM(dv.total_articulo) - SUM(dv.cantidad * p.costo) AS utilidad " +
+                     "FROM producto p " +
+                     "JOIN detalle_venta dv ON p.id = dv.producto_id " +
+                     "GROUP BY p.id, p.nombre " +
+                     "ORDER BY utilidad DESC";
+
+        try {
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> fila = new HashMap<>();
+                fila.put("id", rs.getInt("id"));
+                fila.put("nombre", rs.getString("nombre"));
+                fila.put("total_vendido", rs.getInt("total_vendido"));
+                fila.put("costo_total", rs.getDouble("costo_total"));
+                fila.put("ingreso_total", rs.getDouble("ingreso_total"));
+                fila.put("utilidad", rs.getDouble("utilidad"));
+                lista.add(fila);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error en getUtilidadesPorProducto: " + e.getMessage());
+        }
+
+        Conexion.cerrarConexion();
+        return lista;
+    }
 }

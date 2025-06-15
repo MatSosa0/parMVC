@@ -22,6 +22,7 @@
 <div class="container mt-4">
     <h2>Listado de Proveedores</h2>
     <a href="ControladorProveedores?accion=nuevo" class="btn btn-primary mb-3">Agregar Proveedor</a>
+    <a href="<%= request.getContextPath() %>/Controlador?accion=listar" class="btn btn-primary mb-3">Volver</a>
 
     <table class="table table-bordered">
         <thead class="table-dark">

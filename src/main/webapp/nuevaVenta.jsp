@@ -59,7 +59,7 @@
             for (DetalleVenta d : carrito) {
                 String nombreProducto = "";
                 for (Producto p : productosRef) {
-                    if (p.getId() == d.getIdProducto()) {
+                    if (p.getId() == d.getProductoId()) {
                         nombreProducto = p.getNombre();
                         break;
                     }
@@ -69,8 +69,9 @@
             <td><%= nombreProducto %></td>
             <td><%= d.getCantidad() %></td>
             <td>Gs. <%= d.getPrecioUnitario() %></td>
-            <td>Gs. <%= d.getSubtotal() %></td>
+            <td>Gs. <%= d.getCantidad() * d.getPrecioUnitario() %></td>
         </tr>
+
         <%
             }
         %>

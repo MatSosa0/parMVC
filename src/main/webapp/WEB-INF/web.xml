@@ -40,6 +40,79 @@
         <servlet-class>controlador.ControladorVentas</servlet-class>
     </servlet>
     
+    <servlet>
+        <servlet-name>ReporteInventario</servlet-name>
+        <servlet-class>controlador.ReporteInventario</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ReporteVentas</servlet-name>
+        <servlet-class>controlador.ReporteVentas</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ReporteCompras</servlet-name>
+        <servlet-class>controlador.ReporteCompras</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ReporteProductosMasVendidos</servlet-name>
+        <servlet-class>controlador.ReporteProductosMasVendidos</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ReporteTopClientes</servlet-name>
+        <servlet-class>controlador.ReporteTopClientes</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ReporteTopProveedores</servlet-name>
+        <servlet-class>controlador.ReporteTopProveedores</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ReporteUtilidades</servlet-name>
+        <servlet-class>controlador.ReporteUtilidades</servlet-class>
+    </servlet>
+    
+    
+
+    <servlet-mapping>
+        <servlet-name>ReporteUtilidades</servlet-name>
+        <url-pattern>/ReporteUtilidades</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ReporteTopProveedores</servlet-name>
+        <url-pattern>/ReporteTopProveedores</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ReporteTopClientes</servlet-name>
+        <url-pattern>/ReporteTopClientes</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ReporteProductosMasVendidos</servlet-name>
+        <url-pattern>/ReporteProductosMasVendidos</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ReporteCompras</servlet-name>
+        <url-pattern>/ReporteCompras</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>ReporteVentas</servlet-name>
+        <url-pattern>/ReporteVentas</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ReporteInventario</servlet-name>
+        <url-pattern>/ReporteInventario</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>ControladorVentas</servlet-name>
         <url-pattern>/ControladorVentas</url-pattern>

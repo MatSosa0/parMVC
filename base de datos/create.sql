@@ -67,7 +67,7 @@ CREATE TABLE detalle_compra (
     FOREIGN KEY (producto_id) REFERENCES producto(id)
 );
 
-CREATE TABLE ventas (
+CREATE TABLE venta (
     id INT AUTO_INCREMENT PRIMARY KEY,
     numero_factura VARCHAR(50),
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,

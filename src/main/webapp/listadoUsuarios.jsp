@@ -30,7 +30,7 @@
                 <div class="d-flex">
                     <a class="btn btn-outline-danger" href="ControladorUsuarios?accion=listar">Listar</a>
                     <a class="btn btn-outline-danger ms-2" href="ControladorUsuarios?accion=nuevo">Agregar</a>
-                    <a class="btn btn-outline-danger ms-2" href="Controlador?accion=listar">Volver</a>
+                    <a class="btn btn-outline-danger ms-2" href="<%= request.getContextPath() %>/Controlador?accion=listar" >Volver</a>
                     <a class="btn btn-outline-danger ms-2" href="cerrarSesion">SALIR</a>
                 </div> 
                 

@@ -38,4 +38,14 @@ public class Venta {
     public void setTotalFactura(Double totalFactura) { this.totalFactura = totalFactura; }
     public List<DetalleVenta> getDetalles() { return detalles; }
     public void setDetalles(List<DetalleVenta> detalles) { this.detalles = detalles; }
+    
+    private String clienteNombre;
+
+    public String getClienteNombre() {
+        return clienteNombre;
+    }
+
+    public void setClienteNombre(String clienteNombre) {
+        this.clienteNombre = clienteNombre;
+    }
 }

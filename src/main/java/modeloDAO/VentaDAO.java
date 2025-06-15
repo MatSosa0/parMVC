@@ -2,8 +2,11 @@ package modeloDAO;
 
 import config.Conexion;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import modelo.Venta;
 
 public class VentaDAO {
@@ -15,11 +18,11 @@ public class VentaDAO {
     
     public List<Venta> getVentas() {
         List<Venta> ventas = new ArrayList<>();
-        String sql = "SELECT v.*, c.nombre as cliente_nombre FROM venta v JOIN clientes c ON v.cliente_id = c.id";
-        
+        String sql = "SELECT v.*, c.nombre as cliente_nombre FROM venta v JOIN cliente c ON v.cliente_id = c.id";
+
         try (PreparedStatement ps = conexion.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            
+            ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
                 Venta venta = new Venta();
                 venta.setId(rs.getInt("id"));
@@ -28,7 +31,10 @@ public class VentaDAO {
                 venta.setClienteId(rs.getInt("cliente_id"));
                 venta.setFormaPago(rs.getString("forma_pago"));
                 venta.setTotalFactura(rs.getDouble("total_factura"));
-                
+
+                // Agregado: nombre del cliente
+                venta.setClienteNombre(rs.getString("cliente_nombre"));
+
                 ventas.add(venta);
             }
         } catch (SQLException e) {
@@ -36,9 +42,10 @@ public class VentaDAO {
         } finally {
             Conexion.cerrarConexion();
         }
-        
+
         return ventas;
     }
+
     
     public Venta getId(int id) {
         String sql = "SELECT * FROM venta WHERE id = ?";
@@ -147,4 +154,38 @@ public class VentaDAO {
         
         return resultado;
     }
+    
+    public List<Map<String, Object>> getVentasPorFecha(LocalDate inicio, LocalDate fin) {
+        List<Map<String, Object>> ventas = new ArrayList<>();
+        String sql = "SELECT v.id, v.fecha, v.numero_factura, c.nombre AS cliente, v.forma_pago, v.total_factura " +
+                     "FROM venta v " +
+                     "JOIN cliente c ON v.cliente_id = c.id " +
+                     "WHERE DATE(v.fecha) BETWEEN ? AND ? " +
+                     "ORDER BY v.fecha";
+
+        try {
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+            ps.setDate(1, java.sql.Date.valueOf(inicio));
+            ps.setDate(2, java.sql.Date.valueOf(fin));
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> fila = new HashMap<>();
+                fila.put("id", rs.getInt("id"));
+                fila.put("fecha", rs.getTimestamp("fecha"));
+                fila.put("numero_factura", rs.getString("numero_factura"));
+                fila.put("cliente", rs.getString("cliente"));
+                fila.put("forma_pago", rs.getString("forma_pago"));
+                fila.put("total_factura", rs.getDouble("total_factura"));
+                ventas.add(fila);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error en getVentasPorFecha: " + e.getMessage());
+        }
+
+        Conexion.cerrarConexion();
+        return ventas;
+    }
+
 }
