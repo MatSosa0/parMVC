@@ -23,7 +23,8 @@ public class ReporteVentas extends HttpServlet {
             throws ServletException, IOException {
 
         // Si aún no se seleccionó rango de fechas, mostramos formulario vacío
-        request.getRequestDispatcher("reporteVentas.jsp").forward(request, response);
+        request.setAttribute("contenido","reporteVentas.jsp");
+        request.getRequestDispatcher("template.jsp").forward(request, response);
     }
 
     @Override
@@ -117,7 +118,8 @@ public class ReporteVentas extends HttpServlet {
             request.setAttribute("ventas", ventas);
             request.setAttribute("fecha_inicio", fechaInicioStr);
             request.setAttribute("fecha_fin", fechaFinStr);
-            request.getRequestDispatcher("reporteVentas.jsp").forward(request, response);
+            request.setAttribute("contenido","reporteVentas.jsp");
+            request.getRequestDispatcher("template.jsp").forward(request, response);
         }
     }
 

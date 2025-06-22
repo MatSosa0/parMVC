@@ -30,7 +30,8 @@ public class ControladorAuditoria extends HttpServlet {
                     registros = dao.getRegistros();
                     Collections.reverse(registros);
                     request.setAttribute("registros", registros);
-                    request.getRequestDispatcher("auditoria.jsp").forward(request, response);
+                    request.setAttribute("contenido","auditoria.jsp");
+                    request.getRequestDispatcher("template.jsp").forward(request, response);
                     break;
         }
     }

@@ -21,7 +21,9 @@ public class ReporteCompras extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Mostrar formulario vacío
-        request.getRequestDispatcher("reporteCompras.jsp").forward(request, response);
+        
+        request.setAttribute("contenido","reporteCompras.jsp");
+        request.getRequestDispatcher("template.jsp").forward(request, response);
     }
 
     @Override
@@ -34,7 +36,8 @@ public class ReporteCompras extends HttpServlet {
 
         if (fechaInicioStr == null || fechaFinStr == null) {
             request.setAttribute("error", "Debe seleccionar un rango de fechas.");
-            request.getRequestDispatcher("reporteCompras.jsp").forward(request, response);
+            request.setAttribute("contenido","reporteCompras.jsp");
+            request.getRequestDispatcher("template.jsp").forward(request, response);
             return;
         }
 
@@ -112,7 +115,8 @@ public class ReporteCompras extends HttpServlet {
             request.setAttribute("compras", compras);
             request.setAttribute("fecha_inicio", fechaInicioStr);
             request.setAttribute("fecha_fin", fechaFinStr);
-            request.getRequestDispatcher("reporteCompras.jsp").forward(request, response);
+            request.setAttribute("contenido","reporteCompras.jsp");
+            request.getRequestDispatcher("template.jsp").forward(request, response);
         }
     }
 

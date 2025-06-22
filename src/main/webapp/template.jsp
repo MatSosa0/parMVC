@@ -40,7 +40,7 @@
     <ul class="nav flex-column px-3">
 
         <!-- Navegación principal -->
-        <li class="nav-item"><a href="<%= request.getContextPath() %>/productos.jsp" class="nav-link">Productos</a></li>
+        <li class="nav-item"><a href="ControladorProductos?accion=listar" class="nav-link">Productos</a></li>
         <li class="nav-item"><a href="ControladorClientes?accion=listar" class="nav-link">Clientes</a></li>
         <li class="nav-item"><a href="ControladorProveedores?accion=listar" class="nav-link">Proveedores</a></li>
         <li class="nav-item"><a href="ControladorCompras?accion=nueva" class="nav-link">Compras</a></li>
@@ -70,7 +70,7 @@
 
 <!-- Contenido principal -->
 <div class="main-content">
-    <jsp:include page="${param.contenido}" />
+    <jsp:include page="${contenido}" />
 </div>
 
 <script src="./Bootstrap/js/bootstrap.bundle.js"></script>

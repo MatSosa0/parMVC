@@ -23,7 +23,8 @@ public class ReporteUtilidades extends HttpServlet {
         List<Map<String, Object>> utilidades = dao.getUtilidadesPorProducto();
 
         request.setAttribute("utilidades", utilidades);
-        request.getRequestDispatcher("reporteUtilidades.jsp").forward(request, response);
+        request.setAttribute("contenido","reporteUtilidades.jsp");
+        request.getRequestDispatcher("template.jsp").forward(request, response);
     }
 
     @Override
@@ -99,7 +100,8 @@ public class ReporteUtilidades extends HttpServlet {
 
         } else {
             request.setAttribute("utilidades", utilidades);
-            request.getRequestDispatcher("reporteUtilidades.jsp").forward(request, response);
+            request.setAttribute("contenido","reporteUtilidades.jsp");
+            request.getRequestDispatcher("template.jsp").forward(request, response);
         }
     }
 

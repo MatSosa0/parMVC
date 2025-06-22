@@ -56,10 +56,13 @@ public class ControladorProductos extends HttpServlet {
                     //request.setAttribute("txtCategoria", categoriaAFiltrar);
                     request.setAttribute("Productos", productos);
                 }
-                    request.getRequestDispatcher("listadoProductos.jsp").forward(request, response);
+                    
+                request.setAttribute("contenido","listadoProductos.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
             case "nuevo":
-                request.getRequestDispatcher("addProducto.jsp").forward(request, response);
+                request.setAttribute("contenido","addProducto.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
             case "Agregar":
                 int resultado;
@@ -88,7 +91,8 @@ public class ControladorProductos extends HttpServlet {
                 int id = Integer.valueOf(request.getParameter("id"));
                 Producto p = DaoProducto.getId(id);
                 request.setAttribute("producto", p);
-                request.getRequestDispatcher("editarProducto.jsp").forward(request, response);
+                request.setAttribute("contenido","editarProducto.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
             case "Actualizar":
                 int idProducto = Integer.valueOf(request.getParameter("txtId"));

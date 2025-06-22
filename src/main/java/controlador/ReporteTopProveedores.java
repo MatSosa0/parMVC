@@ -23,7 +23,8 @@ public class ReporteTopProveedores extends HttpServlet {
         List<Map<String, Object>> proveedores = dao.getTopProveedores();
 
         request.setAttribute("proveedores", proveedores);
-        request.getRequestDispatcher("reporteTopProveedores.jsp").forward(request, response);
+        request.setAttribute("contenido","reporteTopProveedores.jsp");
+        request.getRequestDispatcher("template.jsp").forward(request, response);
     }
 
     @Override
@@ -93,7 +94,8 @@ public class ReporteTopProveedores extends HttpServlet {
 
         } else {
             request.setAttribute("proveedores", proveedores);
-            request.getRequestDispatcher("reporteTopProveedores.jsp").forward(request, response);
+            request.setAttribute("contenido","reporteTopProveedores.jsp");
+            request.getRequestDispatcher("template.jsp").forward(request, response);
         }
     }
 

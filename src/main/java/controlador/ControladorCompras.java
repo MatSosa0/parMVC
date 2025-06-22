@@ -31,59 +31,68 @@ public class ControladorCompras extends HttpServlet {
         switch (accion) {
             case "nueva":
                 request.setAttribute("productos", daoProducto.getProductos());
-                request.getRequestDispatcher("nuevaCompra.jsp").forward(request, response);
-                break;
-
-            case "agregarAlCarrito":
-                int idProducto = Integer.parseInt(request.getParameter("productoId"));
-                int cantidad = Integer.parseInt(request.getParameter("cantidad"));
-
-                Producto p = daoProducto.getProductoPorId(idProducto);
-                DetalleCompra dc = new DetalleCompra();
-                dc.setProductoId(idProducto);
-                dc.setCantidad(cantidad);
-                dc.setPrecioUnitario(p.getCosto());
-                dc.setTotalArticulo(p.getCosto() * cantidad);
-
-                carrito.add(dc);
-                total += dc.getTotalArticulo();
-
-                request.getSession().setAttribute("carritoCompra", carrito);
-                request.getSession().setAttribute("totalCompra", total);
-                request.setAttribute("productos", daoProducto.getProductos());
-                request.getRequestDispatcher("nuevaCompra.jsp").forward(request, response);
+                request.setAttribute("contenido","nuevaCompra.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
 
             case "registrarCompra":
-                String numeroFactura = request.getParameter("numeroFactura");
-                int proveedorId = Integer.parseInt(request.getParameter("proveedorId"));
-                String formaPago = request.getParameter("formaPago");
+                try {
+                    String numeroFactura = request.getParameter("numeroFactura");
+                    int proveedorId = Integer.parseInt(request.getParameter("proveedorId"));
+                    String formaPago = request.getParameter("formaPago");
 
-                Compra compra = new Compra();
-                compra.setNumeroFactura(numeroFactura);
-                compra.setProveedorId(proveedorId);
-                compra.setFormaPago(formaPago);
-                compra.setTotalFactura(total);
+                    Compra compra = new Compra();
+                    compra.setNumeroFactura(numeroFactura);
+                    compra.setProveedorId(proveedorId);
+                    compra.setFormaPago(formaPago);
 
-                int idCompra = daoCompra.add(compra);
+                    // Obtener productos seleccionados
+                    String[] productosSeleccionados = request.getParameterValues("producto_id");
+                    double totalFactura = 0.0;
+                    List<DetalleCompra> detalles = new ArrayList<>();
 
-                for (DetalleCompra item : carrito) {
-                    item.setCompraId(idCompra);
-                    daoDetalle.add(item);
+                    if (productosSeleccionados != null) {
+                        for (String idStr : productosSeleccionados) {
+                            int idProducto = Integer.parseInt(idStr);
 
-                    Producto prod = daoProducto.getProductoPorId(item.getProductoId());
-                    int nuevoStock = prod.getUnidades() + item.getCantidad();
-                    daoProducto.actualizarStock(item.getProductoId(), nuevoStock);
+                            int cantidad = Integer.parseInt(request.getParameter("cantidad_" + idProducto));
+                            double precio = Double.parseDouble(request.getParameter("precio_" + idProducto));
+
+                            if (cantidad > 0) {
+                                DetalleCompra detalle = new DetalleCompra();
+                                detalle.setProductoId(idProducto);
+                                detalle.setCantidad(cantidad);
+                                detalle.setPrecioUnitario(precio);
+                                detalle.setTotalArticulo(precio * cantidad);
+
+                                totalFactura += detalle.getTotalArticulo();
+                                detalles.add(detalle);
+                            }
+                        }
+                    }
+
+                    compra.setTotalFactura(totalFactura);
+                    int idCompra = daoCompra.add(compra);
+
+                    // Guardar cada detalle y actualizar stock
+                    for (DetalleCompra item : detalles) {
+                        item.setCompraId(idCompra);
+                        daoDetalle.add(item);
+
+                        Producto prod = daoProducto.getProductoPorId(item.getProductoId());
+                        int nuevoStock = prod.getUnidades() + item.getCantidad();
+                        daoProducto.actualizarStock(item.getProductoId(), nuevoStock);
+                    }
+
+                    request.setAttribute("config", "alert alert-success");
+                    request.setAttribute("mensaje", "¡Compra registrada exitosamente!");
+                    request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+
+                } catch (Exception e) {
+                    request.setAttribute("config", "alert alert-danger");
+                    request.setAttribute("mensaje", "Error al registrar la compra: " + e.getMessage());
+                    request.getRequestDispatcher("mensaje.jsp").forward(request, response);
                 }
-
-                carrito.clear();
-                total = 0.0;
-                request.getSession().removeAttribute("carritoCompra");
-                request.getSession().removeAttribute("totalCompra");
-
-                request.setAttribute("config", "alert alert-success");
-                request.setAttribute("mensaje", "¡Compra registrada exitosamente!");
-                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
                 break;
 
             case "vaciarCarrito":
@@ -93,7 +102,8 @@ public class ControladorCompras extends HttpServlet {
                 request.getSession().removeAttribute("totalCompra");
 
                 request.setAttribute("productos", daoProducto.getProductos());
-                request.getRequestDispatcher("nuevaCompra.jsp").forward(request, response);
+                request.setAttribute("contenido","nuevaCompra.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
 
             default:

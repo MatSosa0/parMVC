@@ -1,6 +1,16 @@
+<%@page import="modelo.Usuario"%>
 <%@page import="java.util.List"%>
 <%@page import="modelo.Cliente"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+        <% 
+            HttpSession sesion = request.getSession();
+            Usuario usuario = (Usuario) sesion.getAttribute("usuarioLogueado");
+            
+            if (usuario == null){
+                response.sendRedirect("index.jsp");
+            }
+        %>
 
 <h2>Listado de Clientes</h2>
 <a href="ControladorClientes?accion=add" class="btn btn-primary mb-3">Agregar Cliente</a>

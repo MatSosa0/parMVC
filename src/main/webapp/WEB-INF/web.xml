@@ -75,7 +75,15 @@
         <servlet-class>controlador.ReporteUtilidades</servlet-class>
     </servlet>
     
-    
+    <servlet>
+        <servlet-name>ControladorProductos</servlet-name>
+        <servlet-class>controlador.ControladorProductos</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ControladorProductos</servlet-name>
+        <url-pattern>/ControladorProductos</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>ReporteUtilidades</servlet-name>

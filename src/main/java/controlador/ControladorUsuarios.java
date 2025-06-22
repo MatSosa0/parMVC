@@ -42,10 +42,12 @@ public class ControladorUsuarios extends HttpServlet {
                 DaoUsuario = new UsuarioDAO();
                 usuarios = DaoUsuario.getUsuarios();
                 request.setAttribute("Usuarios", usuarios);
-                request.getRequestDispatcher("listadoUsuarios.jsp").forward(request, response);
+                request.setAttribute("contenido","listadoUsuarios.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
             case "nuevo":
-                request.getRequestDispatcher("addUsuario.jsp").forward(request, response);
+                request.setAttribute("contenido","addUsuario.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
             case "Agregar":
                 int resultado;
@@ -68,7 +70,8 @@ public class ControladorUsuarios extends HttpServlet {
                 int id = Integer.valueOf(request.getParameter("id"));
                 Usuario u = DaoUsuario.getId(id);
                 request.setAttribute("usuario", u);
-                request.getRequestDispatcher("editarUsuario.jsp").forward(request, response);
+                request.setAttribute("contenido","editarUsuario.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
                 case "Actualizar":
                 int idUsuario1 = Integer.valueOf(request.getParameter("txtId"));

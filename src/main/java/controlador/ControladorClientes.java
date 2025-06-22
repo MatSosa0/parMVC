@@ -36,14 +36,16 @@ public class ControladorClientes extends HttpServlet {
 
 
             case "add":
-                request.getRequestDispatcher("addCliente.jsp").forward(request, response);
+                request.setAttribute("contenido", "addCliente.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
 
             case "editar":
                 int idEditar = Integer.parseInt(request.getParameter("id"));
                 Cliente clienteEditar = dao.getId(idEditar);
                 request.setAttribute("cliente", clienteEditar);
-                request.getRequestDispatcher("editarCliente.jsp").forward(request, response);
+                request.setAttribute("contenido","editarCliente.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
 
             case "eliminar":

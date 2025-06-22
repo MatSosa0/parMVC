@@ -24,7 +24,8 @@ public class ReporteProductosMasVendidos extends HttpServlet {
         List<Map<String, Object>> productos = dao.getProductosMasVendidos();
 
         request.setAttribute("productos", productos);
-        request.getRequestDispatcher("reporteMasVendidos.jsp").forward(request, response);
+        request.setAttribute("contenido","reporteMasVendidos.jsp");
+        request.getRequestDispatcher("template.jsp").forward(request, response);
     }
 
     @Override
@@ -94,7 +95,8 @@ public class ReporteProductosMasVendidos extends HttpServlet {
 
         } else {
             request.setAttribute("productos", productos);
-            request.getRequestDispatcher("reporteMasVendidos.jsp").forward(request, response);
+            request.setAttribute("contenido","reporteMasVendidos.jsp");
+            request.getRequestDispatcher("template.jsp").forward(request, response);
         }
     }
 

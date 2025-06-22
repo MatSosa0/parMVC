@@ -23,7 +23,8 @@ public class ReporteTopClientes extends HttpServlet {
         List<Map<String, Object>> clientes = dao.getTopClientes();
 
         request.setAttribute("clientes", clientes);
-        request.getRequestDispatcher("reporteTopClientes.jsp").forward(request, response);
+        request.setAttribute("contenido","reporteTopClientes.jsp");
+        request.getRequestDispatcher("template.jsp").forward(request, response);
     }
 
     @Override
@@ -93,7 +94,8 @@ public class ReporteTopClientes extends HttpServlet {
 
         } else {
             request.setAttribute("clientes", clientes);
-            request.getRequestDispatcher("reporteTopClientes.jsp").forward(request, response);
+            request.setAttribute("contenido","reporteTopClientes.jsp");
+            request.getRequestDispatcher("template.jsp").forward(request, response);
         }
     }
 

@@ -34,11 +34,13 @@ public class ControladorProveedores extends HttpServlet {
             case "listar":
                 proveedores = daoProveedor.getProveedores();
                 request.setAttribute("listaProveedores", proveedores);
-                request.getRequestDispatcher("listarProveedores.jsp").forward(request, response);
+                request.setAttribute("contenido","listarProveedores.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
 
             case "nuevo":
-                request.getRequestDispatcher("addProveedores.jsp").forward(request, response);
+                request.setAttribute("contenido","addProveedores.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
 
             case "Agregar":
@@ -64,7 +66,8 @@ public class ControladorProveedores extends HttpServlet {
                 int idEditar = Integer.parseInt(request.getParameter("id"));
                 Proveedor proveedorEditar = daoProveedor.getId(idEditar);
                 request.setAttribute("proveedor", proveedorEditar);
-                request.getRequestDispatcher("editarProveedores.jsp").forward(request, response);
+                request.setAttribute("contenido","editarProveedores.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
 
             case "Actualizar":

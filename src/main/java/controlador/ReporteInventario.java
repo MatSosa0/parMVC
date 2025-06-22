@@ -104,7 +104,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     }else {
             // 👉 Vista normal en tabla
             request.setAttribute("inventario", inventario);
-            request.getRequestDispatcher("reporteInventario.jsp").forward(request, response);
+            request.setAttribute("contenido","reporteInventario.jsp");
+            request.getRequestDispatcher("template.jsp").forward(request, response);
         }
     }
 

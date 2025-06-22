@@ -34,7 +34,8 @@ public class Validar extends HttpServlet {
                 session.setAttribute("idUsuario", usuario.getId());
                 session.setAttribute("nombreUsuario", usuario.getNombre());
                 session.setAttribute("usuarioAdministrador", usuario.getAdministrador());
-                request.getRequestDispatcher("listadoProductos.jsp").forward(request, response);
+                request.setAttribute("contenido","listadoProductos.jsp");
+                request.getRequestDispatcher("template.jsp").forward(request, response);
                 
             } else {
                 
