@@ -92,6 +92,38 @@ public class CompraDAO {
         Conexion.cerrarConexion();
         return compras;
     }
+    
+    public List<Map<String, Object>> getComprasConProveedor() {
+        List<Map<String, Object>> compras = new ArrayList<>();
+        String sql = "SELECT c.id, c.numero_factura, c.fecha, c.forma_pago, c.total_factura, p.nombre AS proveedor " +
+                     "FROM compra c " +
+                     "JOIN proveedor p ON c.proveedor_id = p.id " +
+                     "ORDER BY c.fecha DESC";
+
+        try {
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> fila = new HashMap<>();
+                fila.put("id", rs.getInt("id"));
+                fila.put("numeroFactura", rs.getString("numero_factura"));
+                fila.put("fecha", rs.getTimestamp("fecha"));
+                fila.put("formaPago", rs.getString("forma_pago"));
+                fila.put("totalFactura", rs.getDouble("total_factura"));
+                fila.put("proveedorNombre", rs.getString("proveedor"));
+                compras.add(fila);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener compras con proveedor: " + e.getMessage());
+        } finally {
+            Conexion.cerrarConexion();
+        }
+
+        return compras;
+    }
+
 
 
 }

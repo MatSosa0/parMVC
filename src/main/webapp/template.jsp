@@ -43,7 +43,7 @@
         <li class="nav-item"><a href="ControladorProductos?accion=listar" class="nav-link">Productos</a></li>
         <li class="nav-item"><a href="ControladorClientes?accion=listar" class="nav-link">Clientes</a></li>
         <li class="nav-item"><a href="ControladorProveedores?accion=listar" class="nav-link">Proveedores</a></li>
-        <li class="nav-item"><a href="ControladorCompras?accion=nueva" class="nav-link">Compras</a></li>
+        <li class="nav-item"><a href="ControladorCompras?accion=listar" class="nav-link">Compras</a></li>
         <li class="nav-item"><a href="ControladorVentas?accion=listar" class="nav-link">Ventas</a></li>
 
         <!-- Reportes -->

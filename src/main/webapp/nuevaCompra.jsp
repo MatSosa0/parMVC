@@ -13,23 +13,39 @@
     <meta charset="UTF-8">
     <title>Nueva Compra</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <script>
         function calcularTotal() {
             let total = 0;
-            document.querySelectorAll("input[name='producto_id[]']").forEach(function(checkbox) {
+            const checkboxes = document.querySelectorAll("input[name='producto_id[]']");
+            checkboxes.forEach(function (checkbox) {
                 if (checkbox.checked) {
                     const id = checkbox.value;
-                    const cantidad = parseFloat(document.querySelector(`input[name='cantidad_${id}']`).value) || 0;
-                    const precio = parseFloat(document.querySelector(`input[name='precio_${id}']`).value) || 0;
-                    total += cantidad * precio;
+                    const cantidadInput = document.querySelector(`input[name='cantidad_${id}']`);
+                    const precioInput = document.querySelector(`input[name='precio_${id}']`);
+
+                    if (cantidadInput && precioInput) {
+                        const cantidad = parseFloat(cantidadInput.value) || 0;
+                        const precio = parseFloat(precioInput.value) || 0;
+                        total += cantidad * precio;
+                    }
                 }
             });
-            document.getElementById("totalEstimado").value = total.toFixed(2);
+
+            const totalInput = document.getElementById("totalEstimado");
+            if (totalInput) {
+                totalInput.value = total.toFixed(2);
+            }
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll("input[name='producto_id[]'], input[type='number']").forEach(function (elemento) {
-                elemento.addEventListener("input", calcularTotal);
+        // Usar esto para asegurar que todos los campos estén renderizados antes de añadir eventos
+        window.addEventListener("load", function () {
+            document.querySelectorAll("input[type='number']").forEach(function (input) {
+                input.addEventListener("input", calcularTotal);
+            });
+
+            document.querySelectorAll("input[name='producto_id[]']").forEach(function (checkbox) {
+                checkbox.addEventListener("change", calcularTotal);
             });
         });
     </script>
