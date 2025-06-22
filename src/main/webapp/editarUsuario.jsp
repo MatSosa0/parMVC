@@ -66,7 +66,7 @@
                     </div>
                     <div class="card-footer">
                         <input type="submit" value="Actualizar" name="accion" class="btn btn-outline-success">
-                        <a href="ControladorUsuarios?accion=listar" class="btn-link ms-2">Volver</a>
+                        <a href="ControladorUsuarios?accion=listar" class="btn btn-outline-primary ms-2">Volver</a>
                     </div>
                 </div>
             </form>

@@ -21,8 +21,10 @@
 
 <div class="container mt-4">
     <h2>Listado de Proveedores</h2>
-    <a href="ControladorProveedores?accion=nuevo" class="btn btn-primary mb-3">Agregar Proveedor</a>
-    <a href="<%= request.getContextPath() %>/Controlador?accion=listar" class="btn btn-primary mb-3">Volver</a>
+    <form class="mb-3">
+        <a href="ControladorProveedores?accion=nuevo" class="btn btn-outline-primary ms-2">Agregar Proveedor</a>
+        <a href="<%= request.getContextPath() %>/Controlador?accion=listar" class="btn btn-outline-primary ms-2">Volver</a>
+    </form>
     <div style="max-height: 427px; overflow-y: auto;">
         <table class="table table-bordered">
             <thead class="table-dark">
