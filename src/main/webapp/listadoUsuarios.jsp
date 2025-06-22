@@ -36,38 +36,40 @@
                 
             </div>
             <hr>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nombres</th>
-                        <th scope="col">Contraseña</th>
-                        <th scope="col">Administrador</th>
-                        <th scope="col">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                    <c:forEach var = "usuario" items="${Usuarios}">
+            <div style="max-height: 427px; overflow-y: auto;">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <th scope="row">${usuario.id}</th>
-                            <td>${usuario.nombre}</td>
-                            <td class="hidetext">${usuario.contrasenia}</td>
-                            <c:choose>
-                                <c:when test="${usuario.administrador == 1}">
-                                <td>Sí</td>
-                                </c:when>
-                                <c:otherwise>
-                                <td>No</td>
-                                </c:otherwise>
-                            </c:choose>
-                            <td>
-                                <a href="ControladorUsuarios?accion=Editar&id=${usuario.id}" class="btn btn-outline-warning">Editar</a>
-                                <a href="ControladorUsuarios?accion=Delete&id=${usuario.id}" class="btn btn-outline-danger">Eliminar</a>
-                            </td>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombres</th>
+                            <th scope="col">Contraseña</th>
+                            <th scope="col">Administrador</th>
+                            <th scope="col">Acciones</th>
                         </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <c:forEach var = "usuario" items="${Usuarios}">
+                            <tr>
+                                <th scope="row">${usuario.id}</th>
+                                <td>${usuario.nombre}</td>
+                                <td class="hidetext">${usuario.contrasenia}</td>
+                                <c:choose>
+                                    <c:when test="${usuario.administrador == 1}">
+                                    <td>Sí</td>
+                                    </c:when>
+                                    <c:otherwise>
+                                    <td>No</td>
+                                    </c:otherwise>
+                                </c:choose>
+                                <td>
+                                    <a href="ControladorUsuarios?accion=Editar&id=${usuario.id}" class="btn btn-outline-warning">Editar</a>
+                                    <a href="ControladorUsuarios?accion=Delete&id=${usuario.id}" class="btn btn-outline-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>    
         </div>
         <script src="./Bootstrap/js/bootstrap.bundle.js"></script>
     </body>

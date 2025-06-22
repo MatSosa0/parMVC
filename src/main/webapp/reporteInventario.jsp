@@ -26,45 +26,47 @@
         <a href="ReporteInventario?formato=excel" class="btn btn-success">Exportar a Excel</a>
     </div>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Categoría</th>
-                <th>Unidades</th>
-                <th>Precio</th>
-                <th>Total en stock</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%
-                List<Map<String, Object>> inventario = (List<Map<String, Object>>) request.getAttribute("inventario");
-                if (inventario != null && !inventario.isEmpty()) {
-                    for (Map<String, Object> fila : inventario) {
-            %>
-            <tr>
-                <td><%= fila.get("id") %></td>
-                <td><%= fila.get("nombre") %></td>
-                <td><%= fila.get("descripcion") %></td>
-                <td><%= fila.get("categoria") %></td>
-                <td><%= fila.get("unidades") %></td>
-                <td>Gs. <%= fila.get("precio") %></td>
-                <td>Gs. <%= fila.get("total_stock") %></td>
-            </tr>
-            <%
+    <div style="max-height: 427px; overflow-y: auto;">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Categoría</th>
+                    <th>Unidades</th>
+                    <th>Precio</th>
+                    <th>Total en stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                    List<Map<String, Object>> inventario = (List<Map<String, Object>>) request.getAttribute("inventario");
+                    if (inventario != null && !inventario.isEmpty()) {
+                        for (Map<String, Object> fila : inventario) {
+                %>
+                <tr>
+                    <td><%= fila.get("id") %></td>
+                    <td><%= fila.get("nombre") %></td>
+                    <td><%= fila.get("descripcion") %></td>
+                    <td><%= fila.get("categoria") %></td>
+                    <td><%= fila.get("unidades") %></td>
+                    <td>Gs. <%= fila.get("precio") %></td>
+                    <td>Gs. <%= fila.get("total_stock") %></td>
+                </tr>
+                <%
+                        }
+                    } else {
+                %>
+                <tr>
+                    <td colspan="7" class="text-center">No hay datos para mostrar.</td>
+                </tr>
+                <%
                     }
-                } else {
-            %>
-            <tr>
-                <td colspan="7" class="text-center">No hay datos para mostrar.</td>
-            </tr>
-            <%
-                }
-            %>
-        </tbody>
-    </table>
+                %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script src="./Bootstrap/js/bootstrap.bundle.js"></script>

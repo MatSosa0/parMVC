@@ -58,37 +58,39 @@
                 <% } } %>
             </div>
             <hr>
-            <table class="table table-striped table-hover align-middle">
-                <thead class="table-dark text-center">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Descripción</th>
-                        <th scope="col">Unidades</th>
-                        <th scope="col">Costo</th>
-                        <th scope="col">Precio</th>
-                        <th scope="col">Categoría</th>
-                        <th scope="col">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="producto" items="${Productos}">
+            <div style="max-height: 427px; overflow-y: auto;">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark text-center">
                         <tr>
-                            <th scope="row" class="text-center">${producto.id}</th>
-                            <td>${producto.nombre}</td>
-                            <td>${producto.descripcion}</td>
-                            <td class="text-center">${producto.unidades}</td>
-                            <td class="text-center">${producto.costo}</td>
-                            <td class="text-center">${producto.precio}</td>
-                            <td class="text-center">${producto.categoria}</td>
-                            <td class="text-nowrap text-center">
-                                <a href="Controlador?accion=Editar&id=${producto.id}" class="btn btn-sm btn-warning me-1">Editar</a>
-                                <a href="Controlador?accion=Delete&id=${producto.id}" class="btn btn-sm btn-danger">Eliminar</a>
-                            </td>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Unidades</th>
+                            <th scope="col">Costo</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Categoría</th>
+                            <th scope="col">Acciones</th>
                         </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="producto" items="${Productos}">
+                            <tr>
+                                <th scope="row" class="text-center">${producto.id}</th>
+                                <td>${producto.nombre}</td>
+                                <td>${producto.descripcion}</td>
+                                <td class="text-center">${producto.unidades}</td>
+                                <td class="text-center">${producto.costo}</td>
+                                <td class="text-center">${producto.precio}</td>
+                                <td class="text-center">${producto.categoria}</td>
+                                <td class="text-nowrap text-center">
+                                    <a href="Controlador?accion=Editar&id=${producto.id}" class="btn btn-sm btn-warning me-1">Editar</a>
+                                    <a href="Controlador?accion=Delete&id=${producto.id}" class="btn btn-sm btn-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>    
         </div>
         <script src="./Bootstrap/js/bootstrap.bundle.js"></script>
     </body>

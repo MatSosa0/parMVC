@@ -31,34 +31,36 @@
             </div>
         </div>
         <hr>
-        <table class="table">
-            <thead class="table-dark">
-                <tr>
-                    <th>N° Factura</th>
-                    <th>Fecha</th>
-                    <th>Cliente</th>
-                    <th>Forma Pago</th>
-                    <th>Total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="venta" items="${ventas}">
+        <div style="max-height: 427px; overflow-y: auto;">
+            <table class="table">
+                <thead class="table-dark">
                     <tr>
-                        <td>${venta.numeroFactura}</td>
-                        <td>${venta.fecha}</td>
-                        <td>${venta.clienteNombre}</td>
-                        <td>${venta.formaPago}</td>
-                        <td>${venta.totalFactura}</td>
-                        <td>
-                            <a href="ControladorVentas?accion=verDetalles&id=${venta.id}" class="btn btn-info btn-sm">Ver</a>
-                            <a href="ControladorVentas?accion=Editar&id=${venta.id}" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="ControladorVentas?accion=Delete&id=${venta.id}" class="btn btn-danger btn-sm">Eliminar</a>
-                        </td>
+                        <th>N° Factura</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Forma Pago</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
                     </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <c:forEach var="venta" items="${ventas}">
+                        <tr>
+                            <td>${venta.numeroFactura}</td>
+                            <td>${venta.fecha}</td>
+                            <td>${venta.clienteNombre}</td>
+                            <td>${venta.formaPago}</td>
+                            <td>${venta.totalFactura}</td>
+                            <td>
+                                <a href="ControladorVentas?accion=verDetalles&id=${venta.id}" class="btn btn-info btn-sm">Ver</a>
+                                <a href="ControladorVentas?accion=Editar&id=${venta.id}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="ControladorVentas?accion=Delete&id=${venta.id}" class="btn btn-danger btn-sm">Eliminar</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
     </div>
     <script src="Bootstrap/js/bootstrap.bundle.js"></script>
 </body>

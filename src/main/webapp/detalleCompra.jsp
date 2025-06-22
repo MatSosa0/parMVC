@@ -25,26 +25,28 @@
     <p><strong>Total Factura:</strong> $<%= compra.getTotalFactura() %></p>
 
     <h5>Productos Comprados</h5>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio Unitario</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% for (DetalleCompra d : detalles) { %>
+    <div style="max-height: 427px; overflow-y: auto;">
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td><%= d.getNombreProducto() %></td>
-                    <td><%= d.getCantidad() %></td>
-                    <td>$<%= d.getPrecioUnitario() %></td>
-                    <td>$<%= d.getTotalArticulo() %></td>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
                 </tr>
-            <% } %>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <% for (DetalleCompra d : detalles) { %>
+                    <tr>
+                        <td><%= d.getNombreProducto() %></td>
+                        <td><%= d.getCantidad() %></td>
+                        <td>$<%= d.getPrecioUnitario() %></td>
+                        <td>$<%= d.getTotalArticulo() %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
     <a href="ControladorCompras?accion=listar" class="btn btn-secondary">Volver</a>
 </body>
 </html>

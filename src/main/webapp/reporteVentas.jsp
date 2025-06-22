@@ -52,42 +52,44 @@
     %>
 
     <!-- Tabla de resultados -->
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Fecha</th>
-                <th>Nº Factura</th>
-                <th>Cliente</th>
-                <th>Forma de Pago</th>
-                <th>Total Factura</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%
-                if (ventas != null && !ventas.isEmpty()) {
-                    for (Map<String, Object> venta : ventas) {
-            %>
+    <div style="max-height: 427px; overflow-y: auto;">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
                 <tr>
-                    <td><%= venta.get("id") %></td>
-                    <td><%= venta.get("fecha") %></td>
-                    <td><%= venta.get("numero_factura") %></td>
-                    <td><%= venta.get("cliente") %></td>
-                    <td><%= venta.get("forma_pago") %></td>
-                    <td>Gs. <%= venta.get("total_factura") %></td>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Nº Factura</th>
+                    <th>Cliente</th>
+                    <th>Forma de Pago</th>
+                    <th>Total Factura</th>
                 </tr>
-            <%
+            </thead>
+            <tbody>
+                <%
+                    if (ventas != null && !ventas.isEmpty()) {
+                        for (Map<String, Object> venta : ventas) {
+                %>
+                    <tr>
+                        <td><%= venta.get("id") %></td>
+                        <td><%= venta.get("fecha") %></td>
+                        <td><%= venta.get("numero_factura") %></td>
+                        <td><%= venta.get("cliente") %></td>
+                        <td><%= venta.get("forma_pago") %></td>
+                        <td>Gs. <%= venta.get("total_factura") %></td>
+                    </tr>
+                <%
+                        }
+                    } else if (ventas != null) {
+                %>
+                    <tr>
+                        <td colspan="6" class="text-center">No se encontraron ventas en ese rango.</td>
+                    </tr>
+                <%
                     }
-                } else if (ventas != null) {
-            %>
-                <tr>
-                    <td colspan="6" class="text-center">No se encontraron ventas en ese rango.</td>
-                </tr>
-            <%
-                }
-            %>
-        </tbody>
-    </table>
+                %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script src="./Bootstrap/js/bootstrap.bundle.js"></script>

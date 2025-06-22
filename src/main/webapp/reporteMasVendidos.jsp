@@ -27,37 +27,39 @@
     </form>
 
     <!-- Tabla de productos -->
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>ID Producto</th>
-                <th>Nombre</th>
-                <th>Total Vendido</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%
-                List<Map<String, Object>> productos = (List<Map<String, Object>>) request.getAttribute("productos");
-                if (productos != null && !productos.isEmpty()) {
-                    for (Map<String, Object> fila : productos) {
-            %>
-            <tr>
-                <td><%= fila.get("id") %></td>
-                <td><%= fila.get("nombre") %></td>
-                <td><%= fila.get("total_vendido") %></td>
-            </tr>
-            <%
+    <div style="max-height: 427px; overflow-y: auto;">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID Producto</th>
+                    <th>Nombre</th>
+                    <th>Total Vendido</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                    List<Map<String, Object>> productos = (List<Map<String, Object>>) request.getAttribute("productos");
+                    if (productos != null && !productos.isEmpty()) {
+                        for (Map<String, Object> fila : productos) {
+                %>
+                <tr>
+                    <td><%= fila.get("id") %></td>
+                    <td><%= fila.get("nombre") %></td>
+                    <td><%= fila.get("total_vendido") %></td>
+                </tr>
+                <%
+                        }
+                    } else {
+                %>
+                <tr>
+                    <td colspan="3" class="text-center">No hay productos vendidos registrados.</td>
+                </tr>
+                <%
                     }
-                } else {
-            %>
-            <tr>
-                <td colspan="3" class="text-center">No hay productos vendidos registrados.</td>
-            </tr>
-            <%
-                }
-            %>
-        </tbody>
-    </table>
+                %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script src="./Bootstrap/js/bootstrap.bundle.js"></script>

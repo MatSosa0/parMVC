@@ -27,37 +27,39 @@
     </form>
 
     <!-- Tabla de resultados -->
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Total Comprado</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%
-                List<Map<String, Object>> clientes = (List<Map<String, Object>>) request.getAttribute("clientes");
-                if (clientes != null && !clientes.isEmpty()) {
-                    for (Map<String, Object> fila : clientes) {
-            %>
-            <tr>
-                <td><%= fila.get("id") %></td>
-                <td><%= fila.get("nombre") %></td>
-                <td>Gs. <%= fila.get("total_comprado") %></td>
-            </tr>
-            <%
+    <div style="max-height: 427px; overflow-y: auto;">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Total Comprado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                    List<Map<String, Object>> clientes = (List<Map<String, Object>>) request.getAttribute("clientes");
+                    if (clientes != null && !clientes.isEmpty()) {
+                        for (Map<String, Object> fila : clientes) {
+                %>
+                <tr>
+                    <td><%= fila.get("id") %></td>
+                    <td><%= fila.get("nombre") %></td>
+                    <td>Gs. <%= fila.get("total_comprado") %></td>
+                </tr>
+                <%
+                        }
+                    } else {
+                %>
+                <tr>
+                    <td colspan="3" class="text-center">No se encontraron datos.</td>
+                </tr>
+                <%
                     }
-                } else {
-            %>
-            <tr>
-                <td colspan="3" class="text-center">No se encontraron datos.</td>
-            </tr>
-            <%
-                }
-            %>
-        </tbody>
-    </table>
+                %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script src="./Bootstrap/js/bootstrap.bundle.js"></script>

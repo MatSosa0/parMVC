@@ -90,33 +90,34 @@
 
         <!-- Productos -->
         <h5 class="mb-3">Seleccionar Productos</h5>
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>Seleccionar</th>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% for (Producto prod : productos) { %>
+        <div style="max-height: 427px; overflow-y: auto;">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
                     <tr>
-                        <td class="text-center">
-                            <input type="checkbox" name="producto_id[]" value="<%= prod.getId() %>">
-                        </td>
-                        <td><%= prod.getNombre() %></td>
-                        <td>
-                            <input type="number" name="cantidad_<%= prod.getId() %>" class="form-control" value="0" min="0">
-                        </td>
-                        <td>
-                            <input type="number" name="precio_<%= prod.getId() %>" class="form-control" value="<%= prod.getCosto() %>" step="0.01" min="0">
-                        </td>
+                        <th>Seleccionar</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
                     </tr>
-                <% } %>
-            </tbody>
-        </table>
-
+                </thead>
+                <tbody>
+                    <% for (Producto prod : productos) { %>
+                        <tr>
+                            <td class="text-center">
+                                <input type="checkbox" name="producto_id[]" value="<%= prod.getId() %>">
+                            </td>
+                            <td><%= prod.getNombre() %></td>
+                            <td>
+                                <input type="number" name="cantidad_<%= prod.getId() %>" class="form-control" value="0" min="0">
+                            </td>
+                            <td>
+                                <input type="number" name="precio_<%= prod.getId() %>" class="form-control" value="<%= prod.getCosto() %>" step="0.01" min="0">
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
         <!-- Botones -->
         <div class="mt-4">
             <button type="submit" class="btn btn-success">Registrar Compra</button>

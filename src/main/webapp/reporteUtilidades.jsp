@@ -27,43 +27,45 @@
     </form>
 
     <!-- Tabla de utilidades -->
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Total Vendido</th>
-                <th>Costo Total</th>
-                <th>Ingreso Total</th>
-                <th>Utilidad</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%
-                List<Map<String, Object>> utilidades = (List<Map<String, Object>>) request.getAttribute("utilidades");
-                if (utilidades != null && !utilidades.isEmpty()) {
-                    for (Map<String, Object> fila : utilidades) {
-            %>
-            <tr>
-                <td><%= fila.get("id") %></td>
-                <td><%= fila.get("nombre") %></td>
-                <td><%= fila.get("total_vendido") %></td>
-                <td>Gs. <%= fila.get("costo_total") %></td>
-                <td>Gs. <%= fila.get("ingreso_total") %></td>
-                <td><strong>Gs. <%= fila.get("utilidad") %></strong></td>
-            </tr>
-            <%
+    <div style="max-height: 427px; overflow-y: auto;">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Total Vendido</th>
+                    <th>Costo Total</th>
+                    <th>Ingreso Total</th>
+                    <th>Utilidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                    List<Map<String, Object>> utilidades = (List<Map<String, Object>>) request.getAttribute("utilidades");
+                    if (utilidades != null && !utilidades.isEmpty()) {
+                        for (Map<String, Object> fila : utilidades) {
+                %>
+                <tr>
+                    <td><%= fila.get("id") %></td>
+                    <td><%= fila.get("nombre") %></td>
+                    <td><%= fila.get("total_vendido") %></td>
+                    <td>Gs. <%= fila.get("costo_total") %></td>
+                    <td>Gs. <%= fila.get("ingreso_total") %></td>
+                    <td><strong>Gs. <%= fila.get("utilidad") %></strong></td>
+                </tr>
+                <%
+                        }
+                    } else {
+                %>
+                <tr>
+                    <td colspan="6" class="text-center">No se encontraron datos.</td>
+                </tr>
+                <%
                     }
-                } else {
-            %>
-            <tr>
-                <td colspan="6" class="text-center">No se encontraron datos.</td>
-            </tr>
-            <%
-                }
-            %>
-        </tbody>
-    </table>
+                %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script src="./Bootstrap/js/bootstrap.bundle.js"></script>

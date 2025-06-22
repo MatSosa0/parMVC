@@ -39,32 +39,34 @@
 
         <hr>
 
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>N° Factura</th>
-                    <th>Fecha</th>
-                    <th>Proveedor</th>
-                    <th>Forma Pago</th>
-                    <th>Total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="compra" items="${compras}">
+        <div style="max-height: 427px; overflow-y: auto;">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
                     <tr>
-                        <td>${compra.numeroFactura}</td>
-                        <td>${compra.fecha}</td>
-                        <td>${compra.proveedorNombre}</td>
-                        <td>${compra.formaPago}</td>
-                        <td>Gs. ${compra.totalFactura}</td>
-                        <td>
-                            <a href="ControladorCompras?accion=detalleCompra&id=${compra.id}" class="btn btn-info btn-sm">Ver</a>
-                        </td>
+                        <th>N° Factura</th>
+                        <th>Fecha</th>
+                        <th>Proveedor</th>
+                        <th>Forma Pago</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
                     </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <c:forEach var="compra" items="${compras}">
+                        <tr>
+                            <td>${compra.numeroFactura}</td>
+                            <td>${compra.fecha}</td>
+                            <td>${compra.proveedorNombre}</td>
+                            <td>${compra.formaPago}</td>
+                            <td>Gs. ${compra.totalFactura}</td>
+                            <td>
+                                <a href="ControladorCompras?accion=detalleCompra&id=${compra.id}" class="btn btn-info btn-sm">Ver</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+       </div>
     </div>
 
     <script src="Bootstrap/js/bootstrap.bundle.js"></script>

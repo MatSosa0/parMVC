@@ -51,42 +51,44 @@
     %>
 
     <!-- Tabla de resultados -->
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Fecha</th>
-                <th>Nº Factura</th>
-                <th>Proveedor</th>
-                <th>Forma de Pago</th>
-                <th>Total Factura</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%
-                if (compras != null && !compras.isEmpty()) {
-                    for (Map<String, Object> compra : compras) {
-            %>
-            <tr>
-                <td><%= compra.get("id") %></td>
-                <td><%= compra.get("fecha") %></td>
-                <td><%= compra.get("numero_factura") %></td>
-                <td><%= compra.get("proveedor") %></td>
-                <td><%= compra.get("forma_pago") %></td>
-                <td>Gs. <%= compra.get("total_factura") %></td>
-            </tr>
-            <%
+    <div style="max-height: 427px; overflow-y: auto;">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Nº Factura</th>
+                    <th>Proveedor</th>
+                    <th>Forma de Pago</th>
+                    <th>Total Factura</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                    if (compras != null && !compras.isEmpty()) {
+                        for (Map<String, Object> compra : compras) {
+                %>
+                <tr>
+                    <td><%= compra.get("id") %></td>
+                    <td><%= compra.get("fecha") %></td>
+                    <td><%= compra.get("numero_factura") %></td>
+                    <td><%= compra.get("proveedor") %></td>
+                    <td><%= compra.get("forma_pago") %></td>
+                    <td>Gs. <%= compra.get("total_factura") %></td>
+                </tr>
+                <%
+                        }
+                    } else if (compras != null) {
+                %>
+                <tr>
+                    <td colspan="6" class="text-center">No se encontraron compras en ese rango.</td>
+                </tr>
+                <%
                     }
-                } else if (compras != null) {
-            %>
-            <tr>
-                <td colspan="6" class="text-center">No se encontraron compras en ese rango.</td>
-            </tr>
-            <%
-                }
-            %>
-        </tbody>
-    </table>
+                %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script src="./Bootstrap/js/bootstrap.bundle.js"></script>

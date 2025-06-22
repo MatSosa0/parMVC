@@ -23,43 +23,44 @@
     <h2>Listado de Proveedores</h2>
     <a href="ControladorProveedores?accion=nuevo" class="btn btn-primary mb-3">Agregar Proveedor</a>
     <a href="<%= request.getContextPath() %>/Controlador?accion=listar" class="btn btn-primary mb-3">Volver</a>
-
-    <table class="table table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>RUC</th>
-                <th>Correo</th>
-                <th>Teléfono</th>
-                <th>Dirección</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%
-                List<Proveedor> lista = (List<Proveedor>) request.getAttribute("listaProveedores");
-                if (lista != null) {
-                    for (Proveedor p : lista) {
-            %>
+    <div style="max-height: 427px; overflow-y: auto;">
+        <table class="table table-bordered">
+            <thead class="table-dark">
                 <tr>
-                    <td><%= p.getId() %></td>
-                    <td><%= p.getNombre() %></td>
-                    <td><%= p.getRuc() %></td>
-                    <td><%= p.getCorreo() %></td>
-                    <td><%= p.getTelefono() %></td>
-                    <td><%= p.getDireccion() %></td>
-                    <td>
-                        <a href="ControladorProveedores?accion=Editar&id=<%= p.getId() %>" class="btn btn-warning btn-sm">Editar</a>
-                        <a href="ControladorProveedores?accion=Delete&id=<%= p.getId() %>" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar proveedor?')">Eliminar</a>
-                    </td>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>RUC</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
                 </tr>
-            <%
+            </thead>
+            <tbody>
+                <%
+                    List<Proveedor> lista = (List<Proveedor>) request.getAttribute("listaProveedores");
+                    if (lista != null) {
+                        for (Proveedor p : lista) {
+                %>
+                    <tr>
+                        <td><%= p.getId() %></td>
+                        <td><%= p.getNombre() %></td>
+                        <td><%= p.getRuc() %></td>
+                        <td><%= p.getCorreo() %></td>
+                        <td><%= p.getTelefono() %></td>
+                        <td><%= p.getDireccion() %></td>
+                        <td>
+                            <a href="ControladorProveedores?accion=Editar&id=<%= p.getId() %>" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="ControladorProveedores?accion=Delete&id=<%= p.getId() %>" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar proveedor?')">Eliminar</a>
+                        </td>
+                    </tr>
+                <%
+                        }
                     }
-                }
-            %>
-        </tbody>
-    </table>
+                %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script src="./Bootstrap/js/bootstrap.bundle.js"></script>
