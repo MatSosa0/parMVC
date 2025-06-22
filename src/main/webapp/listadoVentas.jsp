@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Listado de Ventas</title>
-    <link href="../Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     
@@ -60,6 +60,6 @@
             </tbody>
         </table>
     </div>
-    <script src="../Bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="Bootstrap/js/bootstrap.bundle.js"></script>
 </body>
 </html>

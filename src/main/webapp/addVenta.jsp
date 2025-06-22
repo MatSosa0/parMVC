@@ -1,19 +1,18 @@
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="modelo.Cliente"%>
-<%@page import="modelo.Producto"%>
-<%@page import="java.util.List"%>
-<%@page import="modelo.Venta"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!doctype html>
-<html lang="es">
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Editar Venta</title>
-    <link href="../Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <title>Nueva Venta</title>
+    <link href="Bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        .hidetext {
+            -webkit-text-security: disc; /* Para navegadores basados en WebKit */
+            text-security: disc; /* Estándar */
+        }
         .table-container {
             max-height: 400px;
             overflow-y: auto;
@@ -26,7 +25,7 @@
                 var fila = '<tr>' +
                     '<td><select name="productoId" class="form-control producto">' +
                         '<c:forEach items="${productos}" var="producto">' +
-                        '<option value="${producto.id}" data-precio="${producto.precioVenta}">${producto.nombre} (Stock: ${producto.stock})</option>' +
+                        '<option value="${producto.id}" data-precio="${producto.precioVenta}" data-stock="${producto.stock}">${producto.nombre} (Stock: ${producto.stock})</option>' +
                         '</c:forEach>' +
                     '</select></td>' +
                     '<td><input type="number" name="cantidad" class="form-control cantidad" min="1" value="1"></td>' +
@@ -41,7 +40,9 @@
             
             $(document).on("change", ".producto", function() {
                 var precio = $(this).find("option:selected").data("precio");
+                var stock = $(this).find("option:selected").data("stock");
                 $(this).closest("tr").find(".precio").val(precio);
+                $(this).closest("tr").find(".cantidad").attr("max", stock);
                 calcularTotalArticulo($(this).closest("tr"));
             });
             
@@ -69,78 +70,47 @@
                 });
                 $("#totalFactura").val(total.toFixed(2));
             }
-            
-            // Cargar detalles existentes al cargar la página
-            <c:forEach items="${venta.detalles}" var="detalle" varStatus="loop">
-                var filaExistente = '<tr>' +
-                    '<td><select name="productoId" class="form-control producto">' +
-                        '<c:forEach items="${productos}" var="producto">' +
-                        '<option value="${producto.id}" data-precio="${producto.precioVenta}" ' +
-                        '${producto.id == detalle.productoId ? 'selected' : ''}>${producto.nombre} (Stock: ${producto.stock})</option>' +
-                        '</c:forEach>' +
-                    '</select></td>' +
-                    '<td><input type="number" name="cantidad" class="form-control cantidad" min="1" value="${detalle.cantidad}"></td>' +
-                    '<td><input type="number" name="precioUnitario" class="form-control precio" step="0.01" min="0" value="${detalle.precioUnitario}"></td>' +
-                    '<td><input type="number" name="totalArticulo" class="form-control totalArticulo" readonly value="${detalle.totalArticulo}"></td>' +
-                    '<td><button type="button" class="btn btn-danger btn-eliminar">Eliminar</button></td>' +
-                '</tr>';
-                
-                $("#detalles tbody").append(filaExistente);
-                actualizarTotal();
-            </c:forEach>
         });
     </script>
 </head>
 <body>
     <div class="container mt-4">
-        <h1>Editar Venta</h1>
+        <h1>Registrar Nueva Venta</h1>
         
         <c:if test="${not empty error}">
             <div class="alert alert-danger">${error}</div>
         </c:if>
         
-        <form action="ControladorVentas?accion=Actualizar" method="post">
-            <input type="hidden" name="id" value="${venta.id}">
-            
+        <form action="ControladorVentas?accion=Agregar" method="post">
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label class="form-label">N° Factura:</label>
-                    <input type="text" name="numeroFactura" class="form-control" value="${venta.numeroFactura}" required>
+                    <label class="form-label">Número de Factura:</label>
+                    <input type="text" name="numeroFactura" class="form-control" required>
                 </div>
                 
-                <div class="col-md-6">
-                    <label class="form-label">Fecha:</label>
-                    <input type="text" class="form-control" 
-                           value="<%= new SimpleDateFormat("dd/MM/yyyy HH:mm").format(((Venta)request.getAttribute("venta")).getFecha()) %>" 
-                           readonly>
-                </div>
-            </div>
-            
-            <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Cliente:</label>
                     <select name="clienteId" class="form-control" required>
                         <option value="">Seleccione un cliente</option>
                         <c:forEach items="${clientes}" var="cliente">
-                            <option value="${cliente.id}" ${venta.clienteId == cliente.id ? 'selected' : ''}>${cliente.nombre}</option>
+                            <option value="${cliente.id}">${cliente.nombre}</option>
                         </c:forEach>
-                    </select>
-                </div>
-                
-                <div class="col-md-6">
-                    <label class="form-label">Forma de Pago:</label>
-                    <select name="formaPago" class="form-control" required>
-                        <option value="Efectivo" ${venta.formaPago == 'Efectivo' ? 'selected' : ''}>Efectivo</option>
-                        <option value="Tarjeta" ${venta.formaPago == 'Tarjeta' ? 'selected' : ''}>Tarjeta</option>
-                        <option value="Transferencia" ${venta.formaPago == 'Transferencia' ? 'selected' : ''}>Transferencia</option>
                     </select>
                 </div>
             </div>
             
             <div class="row mb-3">
                 <div class="col-md-6">
+                    <label class="form-label">Forma de Pago:</label>
+                    <select name="formaPago" class="form-control" required>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Tarjeta">Tarjeta</option>
+                        <option value="Transferencia">Transferencia</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
                     <label class="form-label">Total Factura:</label>
-                    <input type="number" id="totalFactura" name="totalFactura" class="form-control" value="${venta.totalFactura}" readonly>
+                    <input type="number" id="totalFactura" name="totalFactura" class="form-control" readonly>
                 </div>
             </div>
             
@@ -164,12 +134,12 @@
             
             <div class="mb-3">
                 <button type="button" id="agregarProducto" class="btn btn-primary">Agregar Producto</button>
-                <button type="submit" class="btn btn-success">Actualizar Venta</button>
+                <button type="submit" class="btn btn-success">Guardar Venta</button>
                 <a href="ControladorVentas?accion=listar" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
     
-    <script src="../Bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="Bootstrap/js/bootstrap.bundle.js"></script>
 </body>
 </html>

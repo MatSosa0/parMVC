@@ -14,7 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Detalle de Venta</title>
-    <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
+    <link href="Bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -75,7 +75,7 @@
     <a href="ControladorVentas?accion=listar" class="btn btn-secondary">Volver</a>
 </div>
 
-<script src="../Bootstrap/js/bootstrap.bundle.js"></script>
+<script src="Bootstrap/js/bootstrap.bundle.js"></script>
 </body>
 </html>
 
