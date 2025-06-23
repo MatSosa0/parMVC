@@ -46,7 +46,33 @@ public class ProductoDAO implements InterfazProductoDAO {
             System.err.println("Error: " + e);
         }
         
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
+        
+        return productos;
+    }
+    
+     public List<Producto> getProductosConStock() {
+        List<Producto> productos = new ArrayList<>();
+        String sql = "SELECT * FROM producto where unidades > 0;";
+        try {
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Producto producto = new Producto();
+                producto.setId(rs.getInt("id"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setDescripcion(rs.getString("descripcion"));
+                producto.setUnidades(rs.getInt("unidades"));
+                producto.setCosto(rs.getDouble("costo"));
+                producto.setPrecio(rs.getDouble("Precio"));
+                producto.setCategoria(rs.getString("categoria"));
+                productos.add(producto);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error: " + e);
+        }
+        
+        //Conexion.cerrarConexion();
         
         return productos;
     }
@@ -72,7 +98,7 @@ public class ProductoDAO implements InterfazProductoDAO {
             System.err.println("Error: " + e);
         }
         
-        Conexion.cerrarConexion();
+       // Conexion.cerrarConexion();
         
         return producto;
     }
@@ -94,7 +120,7 @@ public class ProductoDAO implements InterfazProductoDAO {
             System.err.println("Error al agregar en la base de datos" + e);
         }
         
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
         
         return resultado;
     }
@@ -117,7 +143,7 @@ public class ProductoDAO implements InterfazProductoDAO {
             System.err.println("Error al agregar en la base de datos" + e);
         }
         
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
         
         return resultado;
     }
@@ -133,7 +159,7 @@ public class ProductoDAO implements InterfazProductoDAO {
             System.err.println("Ha ocurrido un error durante el borrado" + e);
         }
         
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
         
         return resultado;
     }
@@ -158,7 +184,7 @@ public class ProductoDAO implements InterfazProductoDAO {
     } catch (SQLException e) {
         System.err.println("Error al obtener producto por ID: " + e);
     } finally {
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
     }
     return producto;
 }
@@ -174,7 +200,7 @@ public class ProductoDAO implements InterfazProductoDAO {
     } catch (SQLException e) {
         System.err.println("Error al actualizar stock del producto: " + e);
     } finally {
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
     }
     return resultado;
 }
@@ -203,7 +229,7 @@ public class ProductoDAO implements InterfazProductoDAO {
             System.err.println("Error al obtener inventario: " + e.getMessage());
         }
 
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
         return inventario;
     }
     
@@ -231,7 +257,7 @@ public class ProductoDAO implements InterfazProductoDAO {
             System.err.println("Error en getProductosMasVendidos: " + e.getMessage());
         }
 
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
         return productos;
     }
     
@@ -266,7 +292,7 @@ public class ProductoDAO implements InterfazProductoDAO {
             System.err.println("Error en getUtilidadesPorProducto: " + e.getMessage());
         }
 
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
         return lista;
     }
 }

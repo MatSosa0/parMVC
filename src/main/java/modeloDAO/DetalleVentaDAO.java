@@ -7,22 +7,25 @@ import java.util.List;
 import modelo.DetalleVenta;
 
 public class DetalleVentaDAO {
+
     private Connection conexion;
-    
+
     public DetalleVentaDAO() {
         this.conexion = Conexion.Conectar();
     }
-    
+
     public List<DetalleVenta> getDetallesPorVenta(int ventaId) {
+        System.out.println("Buscando detalles de venta ID: " + ventaId);
         List<DetalleVenta> detalles = new ArrayList<>();
-        String sql = "SELECT dv.*, p.nombre as producto_nombre FROM detalle_venta dv " +
-                     "JOIN productos p ON dv.producto_id = p.id WHERE dv.venta_id = ?";
-        
+        String sql = "SELECT dv.*, p.nombre as producto_nombre FROM detalle_venta dv "
+                + "LEFT JOIN producto p ON dv.producto_id = p.id WHERE dv.venta_id = ?";
+
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, ventaId);
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    System.out.println("Detalle encontrado: Producto ID: " + rs.getInt("producto_id") + ", Cantidad: " + rs.getInt("cantidad"));
                     DetalleVenta detalle = new DetalleVenta();
                     detalle.setId(rs.getInt("id"));
                     detalle.setVentaId(rs.getInt("venta_id"));
@@ -30,27 +33,42 @@ public class DetalleVentaDAO {
                     detalle.setCantidad(rs.getInt("cantidad"));
                     detalle.setPrecioUnitario(rs.getDouble("precio_unitario"));
                     detalle.setTotalArticulo(rs.getDouble("total_articulo"));
-                    
+                    detalle.setNombreProducto(rs.getString("producto_nombre"));
                     detalles.add(detalle);
                 }
             }
         } catch (SQLException e) {
             System.err.println("Error al obtener detalles: " + e);
         } finally {
-            Conexion.cerrarConexion();
+            // Conexion.cerrarConexion();
         }
-        
+
         return detalles;
     }
-    
+
+    public void agregar(DetalleVenta d) {
+        String sql = "INSERT INTO detalle_venta(venta_id, producto_id, cantidad, precio_unitario, total_articulo) VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+            ps.setInt(1, d.getVentaId());
+            ps.setInt(2, d.getProductoId());
+            ps.setInt(3, d.getCantidad());
+            ps.setDouble(4, d.getPrecioUnitario());
+            ps.setDouble(5, d.getTotalArticulo());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al agregar detalle de venta: " + e.getMessage());
+        }
+    }
+
     public boolean addDetalles(List<DetalleVenta> detalles, int ventaId) {
-        String sql = "INSERT INTO detalle_venta(venta_id, producto_id, cantidad, precio_unitario, total_articulo) " +
-                     "VALUES (?, ?, ?, ?, ?)";
-        String actualizarStock = "UPDATE productos SET stock = stock - ? WHERE id = ?";
-        
+        String sql = "INSERT INTO detalle_venta(venta_id, producto_id, cantidad, precio_unitario, total_articulo) "
+                + "VALUES (?, ?, ?, ?, ?)";
+        String actualizarStock = "UPDATE producto SET stock = stock - ? WHERE id = ?";
+
         try {
             conexion.setAutoCommit(false);
-            
+
             // Registrar todos los detalles
             try (PreparedStatement ps = conexion.prepareStatement(sql)) {
                 for (DetalleVenta detalle : detalles) {
@@ -63,7 +81,7 @@ public class DetalleVentaDAO {
                 }
                 ps.executeBatch();
             }
-            
+
             // Actualizar stock de productos
             try (PreparedStatement ps = conexion.prepareStatement(actualizarStock)) {
                 for (DetalleVenta detalle : detalles) {
@@ -73,7 +91,7 @@ public class DetalleVentaDAO {
                 }
                 ps.executeBatch();
             }
-            
+
             conexion.commit();
             return true;
         } catch (SQLException e) {
@@ -90,22 +108,22 @@ public class DetalleVentaDAO {
             } catch (SQLException e) {
                 System.err.println("Error al restaurar autoCommit: " + e);
             }
-            Conexion.cerrarConexion();
+            //Conexion.cerrarConexion();
         }
     }
-    
+
     public boolean updateDetalles(List<DetalleVenta> detalles, int ventaId) {
         String deleteSql = "DELETE FROM detalle_venta WHERE venta_id = ?";
-        String insertSql = "INSERT INTO detalle_venta(venta_id, producto_id, cantidad, precio_unitario, total_articulo) " +
-                          "VALUES (?, ?, ?, ?, ?)";
-        String ajusteStock = "UPDATE productos SET stock = stock + ? WHERE id = ?";
-        
+        String insertSql = "INSERT INTO detalle_venta(venta_id, producto_id, cantidad, precio_unitario, total_articulo) "
+                + "VALUES (?, ?, ?, ?, ?)";
+        String ajusteStock = "UPDATE producto SET stock = stock + ? WHERE id = ?";
+
         try {
             conexion.setAutoCommit(false);
-            
+
             // 1. Obtener detalles antiguos para ajustar stock
             List<DetalleVenta> detallesAntiguos = getDetallesPorVenta(ventaId);
-            
+
             // 2. Ajustar stock (devolver lo que se había quitado)
             try (PreparedStatement ps = conexion.prepareStatement(ajusteStock)) {
                 for (DetalleVenta detalle : detallesAntiguos) {
@@ -115,13 +133,13 @@ public class DetalleVentaDAO {
                 }
                 ps.executeBatch();
             }
-            
+
             // 3. Eliminar detalles antiguos
             try (PreparedStatement ps = conexion.prepareStatement(deleteSql)) {
                 ps.setInt(1, ventaId);
                 ps.executeUpdate();
             }
-            
+
             // 4. Insertar nuevos detalles
             try (PreparedStatement ps = conexion.prepareStatement(insertSql)) {
                 for (DetalleVenta detalle : detalles) {
@@ -134,7 +152,7 @@ public class DetalleVentaDAO {
                 }
                 ps.executeBatch();
             }
-            
+
             // 5. Actualizar stock con los nuevos valores
             try (PreparedStatement ps = conexion.prepareStatement(ajusteStock)) {
                 for (DetalleVenta detalle : detalles) {
@@ -144,7 +162,7 @@ public class DetalleVentaDAO {
                 }
                 ps.executeBatch();
             }
-            
+
             conexion.commit();
             return true;
         } catch (SQLException e) {
@@ -161,20 +179,20 @@ public class DetalleVentaDAO {
             } catch (SQLException e) {
                 System.err.println("Error al restaurar autoCommit: " + e);
             }
-            Conexion.cerrarConexion();
+            //Conexion.cerrarConexion();
         }
     }
-    
+
     public boolean deleteDetalles(int ventaId) {
         String sql = "DELETE FROM detalle_venta WHERE venta_id = ?";
-        String ajustarStock = "UPDATE productos SET stock = stock + ? WHERE id = ?";
-        
+        String ajustarStock = "UPDATE producto SET stock = stock + ? WHERE id = ?";
+
         try {
             conexion.setAutoCommit(false);
-            
+
             // 1. Obtener detalles para ajustar stock
             List<DetalleVenta> detalles = getDetallesPorVenta(ventaId);
-            
+
             // 2. Ajustar stock (devolver productos)
             try (PreparedStatement ps = conexion.prepareStatement(ajustarStock)) {
                 for (DetalleVenta detalle : detalles) {
@@ -184,12 +202,12 @@ public class DetalleVentaDAO {
                 }
                 ps.executeBatch();
             }
-            
+
             // 3. Eliminar detalles
             try (PreparedStatement ps = conexion.prepareStatement(sql)) {
                 ps.setInt(1, ventaId);
                 int resultado = ps.executeUpdate();
-                
+
                 conexion.commit();
                 return resultado > 0;
             }
@@ -207,17 +225,58 @@ public class DetalleVentaDAO {
             } catch (SQLException e) {
                 System.err.println("Error al restaurar autoCommit: " + e);
             }
-            Conexion.cerrarConexion();
+            //Conexion.cerrarConexion();
         }
     }
-    
+
+    public DetalleVenta getById(int idDetalle) {
+    DetalleVenta detalle = null;
+    String sql = "SELECT id, id_venta, id_producto, cantidad, precio_unitario, total_articulo FROM detalle_venta WHERE id = ?";
+    try (Connection con = Conexion.Conectar();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setInt(1, idDetalle);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                detalle = new DetalleVenta();
+                detalle.setId(rs.getInt("id"));
+                detalle.setVentaId(rs.getInt("id_venta"));
+                detalle.setProductoId(rs.getInt("id_producto"));
+                detalle.setCantidad(rs.getInt("cantidad"));
+                detalle.setPrecioUnitario(rs.getDouble("precio_unitario"));
+                detalle.setTotalArticulo(rs.getDouble("total_articulo"));
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return detalle;
+}
+
+public boolean deleteById(int idDetalle) {
+    String sql = "DELETE FROM detalle_venta WHERE id = ?";
+    try (Connection con = Conexion.Conectar();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setInt(1, idDetalle);
+        int filasAfectadas = ps.executeUpdate();
+        return filasAfectadas > 0;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+
     public boolean verificarStockDisponible(int productoId, int cantidad) {
-        String sql = "SELECT stock FROM productos WHERE id = ? AND stock >= ?";
-        
+        String sql = "SELECT stock FROM producto WHERE id = ? AND stock >= ?";
+
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, productoId);
             ps.setInt(2, cantidad);
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next(); // Si hay resultados, hay stock suficiente
             }
@@ -225,7 +284,7 @@ public class DetalleVentaDAO {
             System.err.println("Error al verificar stock: " + e);
             return false;
         } finally {
-            Conexion.cerrarConexion();
+            // Conexion.cerrarConexion();
         }
     }
 }

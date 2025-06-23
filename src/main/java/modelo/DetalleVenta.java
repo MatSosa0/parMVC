@@ -7,9 +7,11 @@ public class DetalleVenta {
     private Integer cantidad;
     private Double precioUnitario;
     private Double totalArticulo;
+    
+    // 👇 Este es el nuevo campo que necesitas para mostrar en la vista
+    private String nombreProducto;
 
-    public DetalleVenta() {
-    }
+    public DetalleVenta() {}
 
     public DetalleVenta(Integer ventaId, Integer productoId, Integer cantidad, Double precioUnitario, Double totalArticulo) {
         this.ventaId = ventaId;
@@ -32,4 +34,13 @@ public class DetalleVenta {
     public void setPrecioUnitario(Double precioUnitario) { this.precioUnitario = precioUnitario; }
     public Double getTotalArticulo() { return totalArticulo; }
     public void setTotalArticulo(Double totalArticulo) { this.totalArticulo = totalArticulo; }
+
+    // 👇 Nuevo getter y setter
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
 }

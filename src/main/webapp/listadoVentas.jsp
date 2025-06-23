@@ -53,7 +53,7 @@
                             <td>${venta.totalFactura}</td>
                             <td>
                                 <a href="ControladorVentas?accion=verDetalles&id=${venta.id}" class="btn btn-info btn-sm">Ver</a>
-                                <a href="ControladorVentas?accion=Editar&id=${venta.id}" class="btn btn-warning btn-sm">Editar</a>
+                                <!-- <a href="ControladorVentas?accion=Editar&id=${venta.id}" class="btn btn-warning btn-sm">Editar</a> -->
                                 <a href="ControladorVentas?accion=Delete&id=${venta.id}" class="btn btn-danger btn-sm">Eliminar</a>
                             </td>
                         </tr>

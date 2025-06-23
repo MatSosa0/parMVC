@@ -40,7 +40,7 @@ public class VentaDAO {
         } catch (SQLException e) {
             System.err.println("Error: " + e);
         } finally {
-            Conexion.cerrarConexion();
+            //Conexion.cerrarConexion();
         }
 
         return ventas;
@@ -67,7 +67,7 @@ public class VentaDAO {
         } catch (SQLException e) {
             System.err.println("Error: " + e);
         } finally {
-            Conexion.cerrarConexion();
+            //Conexion.cerrarConexion();
         }
         
         return venta;
@@ -110,7 +110,7 @@ public class VentaDAO {
             } catch (SQLException e) {
                 System.err.println("Error al restaurar autoCommit: " + e);
             }
-            Conexion.cerrarConexion();
+            //Conexion.cerrarConexion();
         }
         
         return resultado;
@@ -133,7 +133,7 @@ public class VentaDAO {
         } catch (SQLException e) {
             System.err.println("Error al actualizar venta: " + e);
         } finally {
-            Conexion.cerrarConexion();
+            //Conexion.cerrarConexion();
         }
         
         return resultado;
@@ -149,7 +149,7 @@ public class VentaDAO {
         } catch (SQLException e) {
             System.err.println("Error al eliminar venta: " + e);
         } finally {
-            Conexion.cerrarConexion();
+            //Conexion.cerrarConexion();
         }
         
         return resultado;
@@ -184,7 +184,7 @@ public class VentaDAO {
             System.err.println("Error en getVentasPorFecha: " + e.getMessage());
         }
 
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
         return ventas;
     }
 

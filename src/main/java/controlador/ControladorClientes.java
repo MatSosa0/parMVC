@@ -53,7 +53,7 @@ public class ControladorClientes extends HttpServlet {
                 dao.delete(idEliminar);
                 response.sendRedirect("ControladorClientes?accion=listar");
                 break;
-
+      
             default:
                 response.sendRedirect("ControladorClientes?accion=listar");
                 break;

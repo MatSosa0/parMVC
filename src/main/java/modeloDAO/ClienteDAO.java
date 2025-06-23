@@ -33,7 +33,7 @@ public class ClienteDAO implements InterfazClienteDAO {
             System.err.println("Error al listar clientes: " + e);
         }
 
-        Conexion.cerrarConexion();
+       // Conexion.cerrarConexion();
         return lista;
     }
 
@@ -57,7 +57,7 @@ public class ClienteDAO implements InterfazClienteDAO {
             System.err.println("Error al obtener cliente por ID: " + e);
         }
 
-        Conexion.cerrarConexion();
+       // Conexion.cerrarConexion();
         return c;
     }
 
@@ -77,7 +77,7 @@ public class ClienteDAO implements InterfazClienteDAO {
             System.err.println("Error al agregar cliente: " + e);
         }
 
-        Conexion.cerrarConexion();
+       // Conexion.cerrarConexion();
         return resultado;
     }
 
@@ -98,7 +98,7 @@ public class ClienteDAO implements InterfazClienteDAO {
             System.err.println("Error al actualizar cliente: " + e);
         }
 
-        Conexion.cerrarConexion();
+       // Conexion.cerrarConexion();
         return resultado;
     }
 
@@ -114,7 +114,7 @@ public class ClienteDAO implements InterfazClienteDAO {
             System.err.println("Error al eliminar cliente: " + e);
         }
 
-        Conexion.cerrarConexion();
+        //Conexion.cerrarConexion();
         return resultado;
     }
     
@@ -143,7 +143,7 @@ public class ClienteDAO implements InterfazClienteDAO {
             System.err.println("Error en getTopClientes: " + e.getMessage());
         }
 
-        Conexion.cerrarConexion();
+       // Conexion.cerrarConexion();
         return clientes;
     }
 
