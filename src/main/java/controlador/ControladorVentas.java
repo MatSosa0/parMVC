@@ -13,6 +13,7 @@ import modelo.Cliente;
 import modelo.Venta;
 import modelo.DetalleVenta;
 import modelo.Producto;
+import modelo.Usuario;
 import modeloDAO.ClienteDAO;
 import modeloDAO.VentaDAO;
 import modeloDAO.DetalleVentaDAO;
@@ -55,9 +56,76 @@ public class ControladorVentas extends HttpServlet {
             case "eliminarDetalle":
                 eliminarDetalleAjax(request, response);
                 break;
+            case "anular":
+                anularVenta(request, response);
+                break;
+            case "verAnuladas":
+                listarVentasAnuladas(request, response);
+                break;
 
             default:
                 listarVentas(request, response);
+        }
+    }
+
+    private void listarVentasAnuladas(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        VentaDAO daoVenta = new VentaDAO();
+        List<Venta> ventasAnuladas = daoVenta.getVentasAnuladas();
+        request.setAttribute("ventas", ventasAnuladas);
+        request.setAttribute("contenido", "listadoVentas.jsp"); // Podés hacer un JSP separado si querés
+        request.getRequestDispatcher("template.jsp").forward(request, response);
+    }
+
+    private void anularVenta(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int idVenta = Integer.parseInt(request.getParameter("id"));
+            VentaDAO daoVenta = new VentaDAO();
+            DetalleVentaDAO detalleDAO = new DetalleVentaDAO();
+            ProductoDAO productoDAO = new ProductoDAO();
+
+            // Obtener usuario logueado
+            HttpSession session = request.getSession();
+            Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado"); 
+
+            if (usuario == null) {
+                request.setAttribute("mensaje", "Error: No hay usuario en sesión.");
+                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+                return;
+            }
+
+            // Recuperar detalles para actualizar stock
+            List<DetalleVenta> detalles = detalleDAO.getDetallesPorVenta(idVenta);
+
+            for (DetalleVenta detalle : detalles) {
+                Producto producto = productoDAO.getId(detalle.getProductoId());
+                int nuevoStock = producto.getUnidades() + detalle.getCantidad();
+                productoDAO.actualizarStock(producto.getId(), nuevoStock);
+
+                // Registrar auditoría por producto
+                daoVenta.registrarAuditoria(
+                        producto.getNombre(),
+                        producto.getDescripcion(),
+                        producto.getUnidades(),
+                        producto.getCosto(),
+                        producto.getPrecio(),
+                        producto.getCategoria(),
+                        usuario.getId(),
+                        usuario.getNombre(),
+                        "anulado"
+                );
+            }
+
+            // Marcar como anulado
+            daoVenta.marcarComoAnulado(idVenta);
+
+            response.sendRedirect("ControladorVentas?accion=listar");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("mensaje", "Error al anular la venta: " + e.getMessage());
+            request.getRequestDispatcher("mensaje.jsp").forward(request, response);
         }
     }
 

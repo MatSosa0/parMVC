@@ -12,8 +12,19 @@ public class Venta {
     private String formaPago;
     private Double totalFactura;
     private List<DetalleVenta> detalles;
+    private boolean anulado;
 
     public Venta() {
+    }
+
+    public Venta(Integer id, String numeroFactura, Date fecha, String formaPago, Double totalFactura, Integer clienteId, boolean anulado) {
+        this.id = id;
+        this.numeroFactura = numeroFactura;
+        this.fecha = fecha;
+        this.formaPago = formaPago;
+        this.totalFactura = totalFactura;
+        this.clienteId = clienteId;
+        this.anulado = anulado;
     }
 
     public Venta(String numeroFactura, Date fecha, Integer clienteId, String formaPago, Double totalFactura) {
@@ -50,7 +61,15 @@ public class Venta {
         this.numeroFactura = numeroFactura;
     }
 
-    public Date getFecha() {
+    public boolean isAnulado() {
+        return anulado;
+    }
+
+    public void setAnulado(boolean anulado) {
+        this.anulado = anulado;
+    }
+
+public Date getFecha() {
         return fecha;
     }
 

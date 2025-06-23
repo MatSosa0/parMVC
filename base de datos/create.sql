@@ -74,6 +74,7 @@ CREATE TABLE venta (
     cliente_id INT,
     forma_pago VARCHAR(50),
     total_factura DECIMAL(10,2),
+    anulado BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (cliente_id) REFERENCES cliente(id)
 );
 

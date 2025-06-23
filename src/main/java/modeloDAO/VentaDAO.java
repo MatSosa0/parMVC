@@ -10,18 +10,55 @@ import java.util.Map;
 import modelo.Venta;
 
 public class VentaDAO {
+
     private Connection conexion;
-    
+
     public VentaDAO() {
         this.conexion = Conexion.Conectar();
     }
-    
+
+    public void marcarComoAnulado(int idVenta) {
+        String sql = "UPDATE venta SET anulado = true WHERE id = ?";
+        try (Connection con = Conexion.Conectar(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idVenta);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+public void registrarAuditoria(String nombreProducto, String descripcionProducto, int unidadesProducto,
+                               double costoProducto, double precioProducto, String categoriaProducto,
+                               int idUsuario, String nombreUsuario, String descripcionAccion) {
+    String sql = "INSERT INTO auditoria (nombreProducto, descripcionProducto, unidadesProducto, " +
+                 "costoProducto, PrecioProducto, categoriaProducto, idUsuario, nombreUsuario, descripcionAccion) " +
+                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    try (Connection con = Conexion.Conectar();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setString(1, nombreProducto);
+        ps.setString(2, descripcionProducto);
+        ps.setInt(3, unidadesProducto);
+        ps.setDouble(4, costoProducto);
+        ps.setDouble(5, precioProducto);
+        ps.setString(6, categoriaProducto);
+        ps.setInt(7, idUsuario);
+        ps.setString(8, nombreUsuario);
+        ps.setString(9, descripcionAccion);
+
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+
     public List<Venta> getVentas() {
         List<Venta> ventas = new ArrayList<>();
-        String sql = "SELECT v.*, c.nombre as cliente_nombre FROM venta v JOIN cliente c ON v.cliente_id = c.id";
+        String sql = "SELECT v.*, c.nombre as cliente_nombre FROM venta v JOIN cliente c ON v.cliente_id = c.id WHERE v.anulado = false ORDER BY id DESC";
 
-        try (PreparedStatement ps = conexion.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = conexion.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Venta venta = new Venta();
@@ -46,14 +83,35 @@ public class VentaDAO {
         return ventas;
     }
 
-    
+    public List<Venta> getVentasAnuladas() {
+        List<Venta> lista = new ArrayList<>();
+        String sql = "SELECT * FROM venta WHERE anulado = true ORDER BY id DESC";
+        try (Connection con = Conexion.Conectar(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Venta v = new Venta();
+                v.setId(rs.getInt("id"));
+                v.setNumeroFactura(rs.getString("numeroFactura"));
+                v.setFecha(rs.getTimestamp("fecha"));
+                v.setFormaPago(rs.getString("formaPago"));
+                v.setTotalFactura(rs.getDouble("totalFactura"));
+                v.setClienteId(rs.getInt("clienteId"));
+                v.setAnulado(rs.getBoolean("anulado"));
+                lista.add(v);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
     public Venta getId(int id) {
         String sql = "SELECT * FROM venta WHERE id = ?";
         Venta venta = new Venta();
-        
+
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, id);
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     venta.setId(rs.getInt("id"));
@@ -69,33 +127,33 @@ public class VentaDAO {
         } finally {
             //Conexion.cerrarConexion();
         }
-        
+
         return venta;
     }
-    
+
     public int add(Venta venta) {
         int resultado = 0;
         String sql = "INSERT INTO venta(numero_factura, fecha, cliente_id, forma_pago, total_factura) VALUES (?, ?, ?, ?, ?)";
-        
+
         try {
             conexion.setAutoCommit(false);
-            
+
             try (PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, venta.getNumeroFactura());
                 ps.setTimestamp(2, new java.sql.Timestamp(venta.getFecha().getTime()));
                 ps.setInt(3, venta.getClienteId());
                 ps.setString(4, venta.getFormaPago());
                 ps.setDouble(5, venta.getTotalFactura());
-                
+
                 resultado = ps.executeUpdate();
-                
+
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         venta.setId(rs.getInt(1));
                     }
                 }
             }
-            
+
             conexion.commit();
         } catch (SQLException e) {
             try {
@@ -112,15 +170,15 @@ public class VentaDAO {
             }
             //Conexion.cerrarConexion();
         }
-        
+
         return resultado;
     }
-    
+
     // En tu VentaDAO.java
     public int update(Venta venta) {
         int resultado = 0;
         String sql = "UPDATE venta SET numero_factura=?, fecha=?, cliente_id=?, forma_pago=?, total_factura=? WHERE id=?";
-        
+
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, venta.getNumeroFactura());
             ps.setTimestamp(2, new java.sql.Timestamp(venta.getFecha().getTime()));
@@ -128,21 +186,21 @@ public class VentaDAO {
             ps.setString(4, venta.getFormaPago());
             ps.setDouble(5, venta.getTotalFactura());
             ps.setInt(6, venta.getId());
-            
+
             resultado = ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error al actualizar venta: " + e);
         } finally {
             //Conexion.cerrarConexion();
         }
-        
+
         return resultado;
     }
 
     public int delete(int id) {
         int resultado = 0;
         String sql = "DELETE FROM venta WHERE id=?";
-        
+
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, id);
             resultado = ps.executeUpdate();
@@ -151,17 +209,17 @@ public class VentaDAO {
         } finally {
             //Conexion.cerrarConexion();
         }
-        
+
         return resultado;
     }
-    
+
     public List<Map<String, Object>> getVentasPorFecha(LocalDate inicio, LocalDate fin) {
         List<Map<String, Object>> ventas = new ArrayList<>();
-        String sql = "SELECT v.id, v.fecha, v.numero_factura, c.nombre AS cliente, v.forma_pago, v.total_factura " +
-                     "FROM venta v " +
-                     "JOIN cliente c ON v.cliente_id = c.id " +
-                     "WHERE DATE(v.fecha) BETWEEN ? AND ? " +
-                     "ORDER BY v.fecha";
+        String sql = "SELECT v.id, v.fecha, v.numero_factura, c.nombre AS cliente, v.forma_pago, v.total_factura "
+                + "FROM venta v "
+                + "JOIN cliente c ON v.cliente_id = c.id "
+                + "WHERE DATE(v.fecha) BETWEEN ? AND ? "
+                + "ORDER BY v.fecha";
 
         try {
             PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
