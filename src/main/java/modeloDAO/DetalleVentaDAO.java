@@ -15,36 +15,38 @@ public class DetalleVentaDAO {
     }
 
     public List<DetalleVenta> getDetallesPorVenta(int ventaId) {
-        System.out.println("Buscando detalles de venta ID: " + ventaId);
-        List<DetalleVenta> detalles = new ArrayList<>();
-        String sql = "SELECT dv.*, p.nombre as producto_nombre FROM detalle_venta dv "
-                + "LEFT JOIN producto p ON dv.producto_id = p.id WHERE dv.venta_id = ?";
+    List<DetalleVenta> lista = new ArrayList<>();
+    String sql = "SELECT dv.*, p.nombre AS nombreProducto " +
+                 "FROM detalle_venta dv " +
+                 "JOIN producto p ON dv.producto_id = p.id " +
+                 "WHERE dv.venta_id = ?";
 
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, ventaId);
+    try (Connection con = Conexion.Conectar();
+         PreparedStatement ps = con.prepareStatement(sql)) {
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    System.out.println("Detalle encontrado: Producto ID: " + rs.getInt("producto_id") + ", Cantidad: " + rs.getInt("cantidad"));
-                    DetalleVenta detalle = new DetalleVenta();
-                    detalle.setId(rs.getInt("id"));
-                    detalle.setVentaId(rs.getInt("venta_id"));
-                    detalle.setProductoId(rs.getInt("producto_id"));
-                    detalle.setCantidad(rs.getInt("cantidad"));
-                    detalle.setPrecioUnitario(rs.getDouble("precio_unitario"));
-                    detalle.setTotalArticulo(rs.getDouble("total_articulo"));
-                    detalle.setNombreProducto(rs.getString("producto_nombre"));
-                    detalles.add(detalle);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al obtener detalles: " + e);
-        } finally {
-            // Conexion.cerrarConexion();
+        ps.setInt(1, ventaId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            DetalleVenta detalle = new DetalleVenta();
+            detalle.setProductoId(rs.getInt("producto_id"));
+            detalle.setCantidad(rs.getInt("cantidad"));
+            detalle.setPrecioUnitario(rs.getDouble("precio_unitario"));
+            detalle.setTotalArticulo(rs.getDouble("total_articulo"));
+            detalle.setNombreProducto(rs.getString("nombreProducto"));
+            detalle.setVentaId(ventaId);
+
+            lista.add(detalle);
         }
 
-        return detalles;
+    } catch (SQLException e) {
+        System.err.println("Error al obtener detalles de venta: " + e.getMessage());
     }
+
+    return lista;
+}
+
+
 
     public void agregar(DetalleVenta d) {
         String sql = "INSERT INTO detalle_venta(venta_id, producto_id, cantidad, precio_unitario, total_articulo) VALUES (?, ?, ?, ?, ?)";
@@ -66,11 +68,11 @@ public class DetalleVentaDAO {
                 + "VALUES (?, ?, ?, ?, ?)";
         String actualizarStock = "UPDATE producto SET stock = stock - ? WHERE id = ?";
 
-        try {
-            conexion.setAutoCommit(false);
+        try (Connection con = Conexion.Conectar()) {
+            con.setAutoCommit(false); // Inicia transacción
 
             // Registrar todos los detalles
-            try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
                 for (DetalleVenta detalle : detalles) {
                     ps.setInt(1, ventaId);
                     ps.setInt(2, detalle.getProductoId());
@@ -83,7 +85,7 @@ public class DetalleVentaDAO {
             }
 
             // Actualizar stock de productos
-            try (PreparedStatement ps = conexion.prepareStatement(actualizarStock)) {
+            try (PreparedStatement ps = con.prepareStatement(actualizarStock)) {
                 for (DetalleVenta detalle : detalles) {
                     ps.setInt(1, detalle.getCantidad());
                     ps.setInt(2, detalle.getProductoId());
@@ -92,23 +94,13 @@ public class DetalleVentaDAO {
                 ps.executeBatch();
             }
 
-            conexion.commit();
+            con.commit();
             return true;
+
         } catch (SQLException e) {
-            try {
-                conexion.rollback();
-            } catch (SQLException ex) {
-                System.err.println("Error en rollback: " + ex);
-            }
-            System.err.println("Error al agregar detalles: " + e);
+            System.err.println("Error al agregar detalles: " + e.getMessage());
+            e.printStackTrace();
             return false;
-        } finally {
-            try {
-                conexion.setAutoCommit(true);
-            } catch (SQLException e) {
-                System.err.println("Error al restaurar autoCommit: " + e);
-            }
-            //Conexion.cerrarConexion();
         }
     }
 
@@ -230,48 +222,45 @@ public class DetalleVentaDAO {
     }
 
     public DetalleVenta getById(int idDetalle) {
-    DetalleVenta detalle = null;
-    String sql = "SELECT id, id_venta, id_producto, cantidad, precio_unitario, total_articulo FROM detalle_venta WHERE id = ?";
-    try (Connection con = Conexion.Conectar();
-         PreparedStatement ps = con.prepareStatement(sql)) {
+        DetalleVenta detalle = null;
+        String sql = "SELECT id, id_venta, id_producto, cantidad, precio_unitario, total_articulo FROM detalle_venta WHERE id = ?";
+        try (Connection con = Conexion.Conectar(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-        ps.setInt(1, idDetalle);
+            ps.setInt(1, idDetalle);
 
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                detalle = new DetalleVenta();
-                detalle.setId(rs.getInt("id"));
-                detalle.setVentaId(rs.getInt("id_venta"));
-                detalle.setProductoId(rs.getInt("id_producto"));
-                detalle.setCantidad(rs.getInt("cantidad"));
-                detalle.setPrecioUnitario(rs.getDouble("precio_unitario"));
-                detalle.setTotalArticulo(rs.getDouble("total_articulo"));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    detalle = new DetalleVenta();
+                    detalle.setId(rs.getInt("id"));
+                    detalle.setVentaId(rs.getInt("id_venta"));
+                    detalle.setProductoId(rs.getInt("id_producto"));
+                    detalle.setCantidad(rs.getInt("cantidad"));
+                    detalle.setPrecioUnitario(rs.getDouble("precio_unitario"));
+                    detalle.setTotalArticulo(rs.getDouble("total_articulo"));
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return detalle;
     }
-    return detalle;
-}
 
-public boolean deleteById(int idDetalle) {
-    String sql = "DELETE FROM detalle_venta WHERE id = ?";
-    try (Connection con = Conexion.Conectar();
-         PreparedStatement ps = con.prepareStatement(sql)) {
+    public boolean deleteById(int idDetalle) {
+        String sql = "DELETE FROM detalle_venta WHERE id = ?";
+        try (Connection con = Conexion.Conectar(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-        ps.setInt(1, idDetalle);
-        int filasAfectadas = ps.executeUpdate();
-        return filasAfectadas > 0;
+            ps.setInt(1, idDetalle);
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
 
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
-
 
     public boolean verificarStockDisponible(int productoId, int cantidad) {
-        String sql = "SELECT stock FROM producto WHERE id = ? AND stock >= ?";
+        String sql = "SELECT unidades FROM producto WHERE id = ? AND unidades >= ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, productoId);

@@ -87,7 +87,7 @@ public class ControladorVentas extends HttpServlet {
 
             // Obtener usuario logueado
             HttpSession session = request.getSession();
-            Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado"); 
+            Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
 
             if (usuario == null) {
                 request.setAttribute("mensaje", "Error: No hay usuario en sesión.");
@@ -165,10 +165,16 @@ public class ControladorVentas extends HttpServlet {
 
     private void mostrarFormularioNuevo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Aquí deberías cargar clientes y productos para los selects
-        // request.setAttribute("clientes", clienteDAO.listarClientes());
-        // request.setAttribute("productos", productoDAO.listarProductosConStock());
-        request.setAttribute("contenido", "addVenta.jsp");
+
+        ClienteDAO clienteDAO = new ClienteDAO();
+        ProductoDAO productoDAO = new ProductoDAO();
+
+        List<Cliente> clientes = clienteDAO.getClientes(); // método que devuelve todos los clientes
+        List<Producto> productos = productoDAO.getProductosConStock(); // productos con stock > 0
+
+        request.setAttribute("clientes", clientes);
+        request.setAttribute("productos", productos);
+        request.setAttribute("contenido", "addVenta.jsp"); // formulario JSP
         request.getRequestDispatcher("template.jsp").forward(request, response);
     }
 
@@ -178,12 +184,10 @@ public class ControladorVentas extends HttpServlet {
         DetalleVentaDAO daoDetalle = new DetalleVentaDAO();
 
         try {
-            // Obtener datos básicos de la venta
             String numeroFactura = request.getParameter("numeroFactura");
             Integer clienteId = Integer.parseInt(request.getParameter("clienteId"));
             String formaPago = request.getParameter("formaPago");
 
-            // Procesar detalles de la venta
             String[] productos = request.getParameterValues("productoId");
             String[] cantidades = request.getParameterValues("cantidad");
             String[] precios = request.getParameterValues("precioUnitario");
@@ -198,7 +202,6 @@ public class ControladorVentas extends HttpServlet {
                     double precioUnitario = Double.parseDouble(precios[i]);
                     double totalArticulo = cantidad * precioUnitario;
 
-                    // Verificar stock disponible
                     if (!daoDetalle.verificarStockDisponible(productoId, cantidad)) {
                         request.setAttribute("config", "alert alert-danger");
                         request.setAttribute("mensaje", "Stock insuficiente para el producto ID: " + productoId);
@@ -217,7 +220,6 @@ public class ControladorVentas extends HttpServlet {
                 }
             }
 
-            // Crear y guardar la venta
             Venta venta = new Venta();
             venta.setNumeroFactura(numeroFactura);
             venta.setFecha(new Date());
@@ -228,10 +230,17 @@ public class ControladorVentas extends HttpServlet {
             int resultado = daoVenta.add(venta);
 
             if (resultado > 0) {
-                // Guardar detalles de la venta
                 boolean detallesGuardados = daoDetalle.addDetalles(detalles, venta.getId());
 
                 if (detallesGuardados) {
+                    // Solo aquí actualizamos stock
+                    ProductoDAO productoDAO = new ProductoDAO();
+                    for (DetalleVenta detalle : detalles) {
+                        Producto producto = productoDAO.getId(detalle.getProductoId());
+                        int nuevoStock = producto.getUnidades() - detalle.getCantidad();
+                        productoDAO.actualizarStock(producto.getId(), nuevoStock);
+                    }
+
                     request.setAttribute("config", "alert alert-success");
                     request.setAttribute("mensaje", "VENTA REGISTRADA CON ÉXITO");
                 } else {
@@ -242,6 +251,7 @@ public class ControladorVentas extends HttpServlet {
                 request.setAttribute("config", "alert alert-danger");
                 request.setAttribute("mensaje", "NO SE PUDO REGISTRAR LA VENTA");
             }
+
         } catch (Exception e) {
             request.setAttribute("config", "alert alert-danger");
             request.setAttribute("mensaje", "ERROR: " + e.getMessage());
