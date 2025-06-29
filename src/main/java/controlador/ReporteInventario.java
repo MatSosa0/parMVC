@@ -10,6 +10,8 @@ import java.util.Map;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import java.io.OutputStream;
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -103,6 +105,13 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         }
     }else {
             // 👉 Vista normal en tabla
+            Set<String> categorias = new HashSet<>();
+            for (Map<String, Object> fila : inventario) {
+                if (fila.get("categoria") != null) {
+                    categorias.add(fila.get("categoria").toString());
+                }
+            }
+            request.setAttribute("categorias", categorias);
             request.setAttribute("inventario", inventario);
             request.setAttribute("contenido","reporteInventario.jsp");
             request.getRequestDispatcher("template.jsp").forward(request, response);

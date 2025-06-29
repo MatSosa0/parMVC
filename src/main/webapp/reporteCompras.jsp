@@ -3,7 +3,6 @@
     Created on : 15 jun 2025, 9:19:36 a.m.
     Author     : Matias
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
@@ -14,6 +13,7 @@
     <meta charset="UTF-8">
     <title>Reporte de Compras por Fecha</title>
     <link href="./Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -50,9 +50,9 @@
         }
     %>
 
-    <!-- Tabla de resultados -->
-    <div style="max-height: 427px; overflow-y: auto;">
-        <table class="table table-bordered table-striped">
+    <!-- Tabla con resultados -->
+    <div class="table-responsive">
+        <table id="tablaCompras" class="table table-bordered table-striped">
             <thead class="table-dark">
                 <tr>
                     <th>ID</th>
@@ -91,7 +91,34 @@
     </div>
 </div>
 
-<script src="./Bootstrap/js/bootstrap.bundle.js"></script>
+<!-- JS DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#tablaCompras').DataTable({
+            pageLength: 7,
+            lengthMenu: [[5, 7, 10, 25, -1], [5, 7, 10, 25, "Todos"]],
+            language: {
+                lengthMenu: "Mostrar _MENU_ registros por página",
+                zeroRecords: "No se encontraron resultados",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                infoFiltered: "(filtrado de _MAX_ registros totales)",
+                search: "Buscar:",
+                paginate: {
+                    first: "Primero",
+                    last: "Último",
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
+            },
+            dom: 'rtip<"d-flex justify-content-end mt-2"l>'
+        });
+    });
+</script>
+
 </body>
 </html>
+
 

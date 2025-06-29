@@ -3,10 +3,10 @@
     Created on : 15 jun 2025, 3:47:52 p.m.
     Author     : Matias
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -14,60 +14,83 @@
     <meta charset="UTF-8">
     <title>Reporte de Utilidades por Producto</title>
     <link rel="stylesheet" href="./Bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 </head>
 <body>
 
 <div class="container mt-4">
     <h2>Utilidades por Producto</h2>
 
-    <!-- Botones de exportación -->
-    <form action="ReporteUtilidades" method="POST" class="mb-3">
-        <button type="submit" name="formato" value="pdf" class="btn btn-danger">Exportar a PDF</button>
-        <button type="submit" name="formato" value="excel" class="btn btn-success">Exportar a Excel</button>
-    </form>
-
-    <!-- Tabla de utilidades -->
-    <div style="max-height: 427px; overflow-y: auto;">
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Total Vendido</th>
-                    <th>Costo Total</th>
-                    <th>Ingreso Total</th>
-                    <th>Utilidad</th>
-                </tr>
-            </thead>
-            <tbody>
-                <%
-                    List<Map<String, Object>> utilidades = (List<Map<String, Object>>) request.getAttribute("utilidades");
-                    if (utilidades != null && !utilidades.isEmpty()) {
-                        for (Map<String, Object> fila : utilidades) {
-                %>
-                <tr>
-                    <td><%= fila.get("id") %></td>
-                    <td><%= fila.get("nombre") %></td>
-                    <td><%= fila.get("total_vendido") %></td>
-                    <td>Gs. <%= fila.get("costo_total") %></td>
-                    <td>Gs. <%= fila.get("ingreso_total") %></td>
-                    <td><strong>Gs. <%= fila.get("utilidad") %></strong></td>
-                </tr>
-                <%
-                        }
-                    } else {
-                %>
-                <tr>
-                    <td colspan="6" class="text-center">No se encontraron datos.</td>
-                </tr>
-                <%
-                    }
-                %>
-            </tbody>
-        </table>
+    <!-- Barra superior -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <label>Buscar:</label>
+            <input type="search" id="buscador" class="form-control form-control-sm" placeholder="Buscar producto...">
+        </div>
+        <form action="ReporteUtilidades" method="POST" class="d-flex gap-2">
+            <button type="submit" name="formato" value="pdf" class="btn btn-danger btn-sm">Exportar a PDF</button>
+            <button type="submit" name="formato" value="excel" class="btn btn-success btn-sm">Exportar a Excel</button>
+        </form>
     </div>
+
+    <!-- Tabla -->
+    <table id="tablaUtilidades" class="display table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Total Vendido</th>
+                <th>Costo Total</th>
+                <th>Ingreso Total</th>
+                <th>Utilidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            <c:forEach var="fila" items="${utilidades}">
+                <tr>
+                    <td>${fila.id}</td>
+                    <td>${fila.nombre}</td>
+                    <td>${fila.total_vendido}</td>
+                    <td>Gs. ${fila.costo_total}</td>
+                    <td>Gs. ${fila.ingreso_total}</td>
+                    <td><strong>Gs. ${fila.utilidad}</strong></td>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
 </div>
 
-<script src="./Bootstrap/js/bootstrap.bundle.js"></script>
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const tabla = $('#tablaUtilidades').DataTable({
+            pageLength: 7,
+            lengthMenu: [[5, 7, 10, 25, -1], [5, 7, 10, 25, "Todos"]],
+            language: {
+                lengthMenu: "Mostrar _MENU_ registros por página",
+                zeroRecords: "No se encontraron resultados",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                infoFiltered: "(filtrado de _MAX_ registros totales)",
+                search: "Buscar:",
+                paginate: {
+                    first: "Primero",
+                    last: "Último",
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
+            },
+            dom: 'rtip<"d-flex justify-content-end mt-2"l>'
+        });
+
+        $('#buscador').on('keyup', function () {
+            tabla.search(this.value).draw();
+        });
+    });
+</script>
+
 </body>
 </html>
+
