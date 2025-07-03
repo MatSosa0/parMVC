@@ -69,7 +69,7 @@ public class Venta {
         this.anulado = anulado;
     }
 
-public Date getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 

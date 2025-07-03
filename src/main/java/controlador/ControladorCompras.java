@@ -11,9 +11,11 @@ import java.util.Map;
 import modelo.Compra;
 import modelo.DetalleCompra;
 import modelo.Producto;
+import modelo.Proveedor; // ¡Importar la clase Proveedor!
 import modeloDAO.CompraDAO;
 import modeloDAO.DetalleCompraDAO;
 import modeloDAO.ProductoDAO;
+import modeloDAO.ProveedorDAO; // ¡Importar ProveedorDAO!
 
 @WebServlet(name = "ControladorCompras", urlPatterns = {"/ControladorCompras"})
 public class ControladorCompras extends HttpServlet {
@@ -21,6 +23,7 @@ public class ControladorCompras extends HttpServlet {
     ProductoDAO daoProducto = new ProductoDAO();
     CompraDAO daoCompra = new CompraDAO();
     DetalleCompraDAO daoDetalle = new DetalleCompraDAO();
+    ProveedorDAO daoProveedor = new ProveedorDAO(); // ¡Añadir instancia de ProveedorDAO!
 
     List<DetalleCompra> carrito = new ArrayList<>();
     double total = 0.0;
@@ -46,11 +49,15 @@ public class ControladorCompras extends HttpServlet {
                 break;
 
             case "nueva":
+                // Aquí es donde necesitamos cargar los proveedores
+                List<Proveedor> proveedores = daoProveedor.getProveedores(); // Obtener la lista de proveedores
+                request.setAttribute("proveedores", proveedores); // Poner la lista en el request scope para la JSP
+
                 request.setAttribute("productos", daoProducto.getProductos());
                 request.setAttribute("contenido","nuevaCompra.jsp");
                 request.getRequestDispatcher("template.jsp").forward(request, response);
                 break;
-                
+
             case "detalleCompra":
                 try {
                     int idCompra = Integer.parseInt(request.getParameter("id"));
@@ -70,7 +77,7 @@ public class ControladorCompras extends HttpServlet {
                 }
                 break;
 
-            case "registrarCompra":
+            case "Agregar": // Este caso en tu JSP está con 'Agregar', no 'registrarCompra'
                 try {
                     String numeroFactura = request.getParameter("numeroFactura");
                     int proveedorId = Integer.parseInt(request.getParameter("proveedorId"));
@@ -81,29 +88,26 @@ public class ControladorCompras extends HttpServlet {
                     compra.setProveedorId(proveedorId);
                     compra.setFormaPago(formaPago);
 
-                    // Obtener productos seleccionados
-                    String[] productosSeleccionados = request.getParameterValues("producto_id[]"); // <-- importante: debe coincidir con el JSP
+                    // Obtener productos seleccionados del formulario dinámico
+                    String[] productoIdsStr = request.getParameterValues("productoId[]"); // Nombres de campos JSP
+                    String[] cantidadesStr = request.getParameterValues("cantidad[]");
+                    String[] costosUnitariosStr = request.getParameterValues("costoUnitario[]");
+
                     double totalFactura = 0.0;
                     List<DetalleCompra> detalles = new ArrayList<>();
 
-                    if (productosSeleccionados != null && productosSeleccionados.length > 0) {
-                        for (String idStr : productosSeleccionados) {
-                            int idProducto = Integer.parseInt(idStr);
+                    if (productoIdsStr != null && productoIdsStr.length > 0) {
+                        for (int i = 0; i < productoIdsStr.length; i++) {
+                            int idProducto = Integer.parseInt(productoIdsStr[i]);
+                            int cantidad = Integer.parseInt(cantidadesStr[i]);
+                            double costo = Double.parseDouble(costosUnitariosStr[i]);
 
-                            String cantidadStr = request.getParameter("cantidad_" + idProducto);
-                            String precioStr = request.getParameter("precio_" + idProducto);
-
-                            if (cantidadStr == null || precioStr == null) continue;
-
-                            int cantidad = Integer.parseInt(cantidadStr);
-                            double precio = Double.parseDouble(precioStr);
-
-                            if (cantidad > 0) {
+                            if (cantidad > 0) { // Solo agregar si la cantidad es mayor a cero
                                 DetalleCompra detalle = new DetalleCompra();
                                 detalle.setProductoId(idProducto);
                                 detalle.setCantidad(cantidad);
-                                detalle.setPrecioUnitario(precio);
-                                detalle.setTotalArticulo(precio * cantidad);
+                                detalle.setPrecioUnitario(costo); // 'precioUnitario' en DetalleCompra es el costo de compra
+                                detalle.setTotalArticulo(costo * cantidad);
 
                                 totalFactura += detalle.getTotalArticulo();
                                 detalles.add(detalle);
@@ -114,21 +118,26 @@ public class ControladorCompras extends HttpServlet {
                     // Validación: al menos un producto con cantidad > 0
                     if (detalles.isEmpty()) {
                         request.setAttribute("config", "alert alert-warning");
-                        request.setAttribute("mensaje", "Debe seleccionar al menos un producto con cantidad mayor a cero.");
-                        request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+                        request.setAttribute("mensaje", "Debe agregar al menos un producto con cantidad mayor a cero.");
+                        // Vuelve a cargar las listas para que el usuario no pierda el contexto
+                        request.setAttribute("proveedores", daoProveedor.getProveedores());
+                        request.setAttribute("productos", daoProducto.getProductos());
+                        request.setAttribute("contenido","nuevaCompra.jsp");
+                        request.getRequestDispatcher("template.jsp").forward(request, response);
                         return;
                     }
 
                     compra.setTotalFactura(totalFactura);
-                    int idCompra = daoCompra.add(compra);
+                    int idCompra = daoCompra.add(compra); // Guarda la cabecera de la compra
 
                     // Guardar cada detalle y actualizar stock
                     for (DetalleCompra item : detalles) {
                         item.setCompraId(idCompra);
                         daoDetalle.add(item);
 
+                        // Actualizar stock del producto
                         Producto prod = daoProducto.getProductoPorId(item.getProductoId());
-                        int nuevoStock = prod.getUnidades() + item.getCantidad();
+                        int nuevoStock = prod.getUnidades() + item.getCantidad(); // Sumar la cantidad comprada al stock
                         daoProducto.actualizarStock(item.getProductoId(), nuevoStock);
                     }
 
@@ -145,11 +154,16 @@ public class ControladorCompras extends HttpServlet {
 
 
             case "vaciarCarrito":
+                // Este caso podría ser menos relevante con el nuevo diseño dinámico.
+                // Si ya no usas un "carrito" persistente en sesión de esta forma, podrías eliminarlo.
+                // Lo mantengo por si tienes otra lógica que lo use.
                 carrito.clear();
                 total = 0.0;
                 request.getSession().removeAttribute("carritoCompra");
                 request.getSession().removeAttribute("totalCompra");
 
+                // Asegúrate de recargar proveedores y productos al "vaciar" y volver a la página de nueva compra
+                request.setAttribute("proveedores", daoProveedor.getProveedores());
                 request.setAttribute("productos", daoProducto.getProductos());
                 request.setAttribute("contenido","nuevaCompra.jsp");
                 request.getRequestDispatcher("template.jsp").forward(request, response);
